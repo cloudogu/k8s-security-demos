@@ -1,0 +1,20 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ingress-allow-prometheus-to-access-mongodb-monitoring
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      role: mongodb
+  ingress:
+  - ports:
+      - port: 9104
+    from:
+      - namespaceSelector:
+          matchLabels:
+            namespace: monitoring
+        podSelector:
+          matchLabels:
+              app: prometheus
+              component: server

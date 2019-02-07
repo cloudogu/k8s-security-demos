@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: allow-no-privilege-escalation
+  name: allow-no-privilege-escalation
+spec:
+  selector:
+    matchLabels:
+      run: allow-no-privilege-escalation
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: allow-no-privilege-escalation
+    spec:
+      containers:
+      - image: schnatterer/docker-sudo:0.1
+        name: allow-no-privilege-escalation
+        securityContext:
+          allowPrivilegeEscalation: false

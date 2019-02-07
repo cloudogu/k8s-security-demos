@@ -1,0 +1,18 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: nosqlclient
+  namespace: production
+  annotations:
+    kubernetes.io/ingress.class: traefik
+    ingress.kubernetes.io/auth-type: basic
+    ingress.kubernetes.io/auth-secret: nosqlclient-basic-auth
+spec:
+  rules:
+  - host: nosqlclient
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: nosqlclient
+          servicePort: 80

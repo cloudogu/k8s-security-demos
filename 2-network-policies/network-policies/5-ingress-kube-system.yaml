@@ -1,0 +1,60 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ingress-default-deny-all
+  namespace: kube-system
+spec:
+  podSelector: {}
+  ingress: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: allow-kube-dns-all-namespaces
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+      k8s-app: kube-dns
+  ingress:
+    - ports:
+      - protocol: UDP
+        port: 53
+      from:
+        - namespaceSelector: {}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ingress-allow-traefik-external
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+      app: traefik
+  ingress:
+    - ports:
+        - port: 80
+        - port: 443
+      from: []
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ingress-allow-prometheus-traefik
+  namespace: kube-system
+spec:
+  podSelector:
+    matchLabels:
+      app: traefik
+  ingress:
+    - ports:
+        - port: 8080
+      from:
+        - namespaceSelector:
+            matchLabels:
+              namespace: monitoring
+          podSelector:
+            matchLabels:
+              app: prometheus
+              component: server

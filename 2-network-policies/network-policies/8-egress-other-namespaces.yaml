@@ -1,0 +1,62 @@
+# TODO these policies result in prometheus no longer being able to scrape itself and mongodb 🤔
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: egress-allow-cluster-internal-only
+  namespace: monitoring
+spec:
+  policyTypes:
+    - Egress
+  podSelector: {}
+  egress:
+    - to:
+        - namespaceSelector: {}
+---
+# For some reason, allowing IPs 10.x.x.x does not include API server, even when its within this range
+# https://stackoverflow.com/q/50102943
+# The following is only a workaround
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: egress-allow-prometheus-server-access-api-server
+  namespace: monitoring
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      app: prometheus
+      component: server
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: egress-allow-cluster-internal-only
+  namespace: kube-system
+spec:
+  policyTypes:
+    - Egress
+  podSelector: {}
+  egress:
+    - to:
+        - namespaceSelector: {}
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: egress-allow-traefik-access-api-server
+  namespace: kube-system
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      app: traefik
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0

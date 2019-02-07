@@ -1,0 +1,44 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    run: nosqlclient
+  name: nosqlclient
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      run: nosqlclient
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: nosqlclient
+    spec:
+      containers:
+      - image: mongoclient/mongoclient:2.2.0
+        name: nosqlclient
+        resources:
+          requests:
+            #cpu: 100m
+            memory: 128Mi
+          limits:
+            #cpu: 500m
+            memory: 512Mi
+        # Error: failed to connect to server [mongodb:27017]
+        # Doesn't seem to happen without readiness probe :-/
+        #readinessProbe:
+        #  httpGet:
+        #    path: /
+        #    port: 3000
+        livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+        ports:
+          - containerPort: 3000
+        env:
+          - name: MONGO_URL
+            value: mongodb://mongodb
+

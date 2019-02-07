@@ -1,0 +1,26 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: ingress-allow-traefik-to-access-nosqlclient
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      run: nosqlclient
+  ingress:
+  - ports:
+      - port: 3000
+    from:
+      - namespaceSelector:
+          matchLabels:
+            namespace: kube-system
+        podSelector:
+          matchLabels:
+            app: traefik
+        # Note:
+        # * kube-system does not have a label by default, so we cannot match it.
+        #   If we wanted to achieve that, we could assign it a label like so: kubectl label namespace/kube-system namespace=kube-system
+        # * Combination of namespaceSelector and podSelector is only available from k8s 1.11+:
+        #   https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG-1.11.md#sig-network-1
+        #   Alternative that works on k8s < 1.11 but is less restrictive: Match all namespaces
+        #- namespaceSelector: {}

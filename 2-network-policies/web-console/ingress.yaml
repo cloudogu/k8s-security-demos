@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: web-console
+  namespace: default
+  annotations:
+    kubernetes.io/ingress.class: traefik
+spec:
+  rules:
+    - host: web-console
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: web-console
+              servicePort: 80

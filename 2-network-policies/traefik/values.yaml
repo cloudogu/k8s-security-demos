@@ -1,0 +1,20 @@
+dashboard:
+  enabled: true
+  domain: traefik
+  ingress:
+    annotations:
+      ingress.kubernetes.io/auth-type: basic
+      ingress.kubernetes.io/auth-secret: traefik-basic-auth
+
+rbac:
+  enabled: true
+metrics:
+  prometheus:
+    enabled: true
+
+deployment:
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+
+

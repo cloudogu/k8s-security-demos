@@ -1,0 +1,27 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: egress-allow-nginx-apt
+  namespace: production
+spec:
+  policyTypes:
+    - Egress
+  podSelector:
+    matchLabels:
+      run: nginx
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 128.61.240.73/32
+        - ipBlock:
+            cidr: 128.31.0.0/24
+        - ipBlock:
+            cidr: 130.89.148.14/32
+        - ipBlock:
+            cidr: 149.20.4.0/24
+        - ipBlock:
+            cidr: 128.101.240.215/32
+        - ipBlock:
+            cidr: 151.101.184.204/32
+        - ipBlock:
+            cidr: 5.153.231.4/32

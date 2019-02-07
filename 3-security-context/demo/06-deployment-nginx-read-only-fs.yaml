@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: failing-nginx-read-only-fs
+  name: failing-nginx-read-only-fs
+spec:
+  selector:
+    matchLabels:
+      run: failing-nginx-read-only-fs
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: failing-nginx-read-only-fs
+    spec:
+      containers:
+        - image: nginx:1.15.8
+          name: failing-nginx-read-only-fs
+          securityContext:
+            readOnlyRootFilesystem: true

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-as-non-root
+  name: run-as-non-root
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      run: run-as-non-root
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        run: run-as-non-root
+    spec:
+      containers:
+      - image: nginx:1.15.8
+        name: run-as-non-root
+        securityContext:
+          runAsNonRoot: true

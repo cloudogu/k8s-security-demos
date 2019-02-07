@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: read-only-fs
+  name: read-only-fs
+spec:
+  selector:
+    matchLabels:
+      run: read-only-fs
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: read-only-fs
+    spec:
+      containers:
+      - image: schnatterer/docker-sudo:0.1
+        name: read-only-fs
+        securityContext:
+          readOnlyRootFilesystem: true
+

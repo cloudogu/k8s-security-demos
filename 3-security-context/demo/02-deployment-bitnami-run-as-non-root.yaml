@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: bitnami-run-as-non-root
+  name: bitnami-run-as-non-root
+spec:
+  selector:
+    matchLabels:
+      run: bitnami-run-as-non-root
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: bitnami-run-as-non-root
+    spec:
+      containers:
+      - image: bitnami/nginx:1.14.2-r9
+        name: bitnami-run-as-non-root
+        securityContext:
+          runAsNonRoot: true

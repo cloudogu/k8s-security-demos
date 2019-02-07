@@ -1,0 +1,29 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: egress-allow-internal-only
+  namespace: default
+spec:
+  policyTypes:
+    - Egress
+  podSelector: {}
+  egress:
+    - to:
+        - namespaceSelector: {}
+        # Almost same effect, but requires knowledge about IP range of internal networks (nodes, services, pods)
+        # https://en.wikipedia.org/wiki/IP_address#Private_addresses
+        #- ipBlock:
+        #    cidr: 10.0.0.0/8
+---
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: egress-allow-internal-only
+  namespace: production
+spec:
+  policyTypes:
+    - Egress
+  podSelector: {}
+  egress:
+    - to:
+        - namespaceSelector: {}

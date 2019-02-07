@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: empty-dirs-nginx-read-only-fs
+  name: empty-dirs-nginx-read-only-fs
+spec:
+  selector:
+    matchLabels:
+      run: empty-dirs-nginx-read-only-fs
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: empty-dirs-nginx-read-only-fs
+    spec:
+      containers:
+        - image: nginx:1.15.8
+          name: empty-dirs-nginx-read-only-fs
+          securityContext:
+            readOnlyRootFilesystem: true
+          volumeMounts:
+            - name: cache
+              mountPath: /var/cache/nginx
+            - name: run
+              mountPath: /run
+      volumes:
+        - name: cache
+          emptyDir: {}
+        - name: run
+          emptyDir: {}

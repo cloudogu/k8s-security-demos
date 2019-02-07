@@ -1,0 +1,18 @@
+alertmanager:
+  enabled: false
+alertmanagerFiles:
+  alertmanager.yml: ""
+pushgateway:
+  enabled: false
+# This seems to lead to failures when connecting to kube api server: "failed to list *v1.Pod: Get https://"
+#networkPolicy:
+  #enabled: true
+
+server:
+  ingress:
+    enabled: true
+    hosts:
+       - prometheus
+    annotations:
+      ingress.kubernetes.io/auth-type: basic
+      ingress.kubernetes.io/auth-secret: prometheus-basic-auth

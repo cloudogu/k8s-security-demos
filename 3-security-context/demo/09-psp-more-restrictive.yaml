@@ -1,0 +1,70 @@
+# See also https://kubernetes.io/docs/concepts/policy/pod-security-policy/#example-policies
+apiVersion: policy/v1beta1
+kind: PodSecurityPolicy
+metadata:
+  name: restricted
+spec:
+  privileged: false
+  allowPrivilegeEscalation: false
+  # Otherwise configmaps, secrets, etc. are not allowed to be used
+  volumes:
+    - '*'
+  runAsUser:
+    rule: 'MustRunAsNonRoot' # Note that this also forces as numeric uid!
+    # ranges: 1..65535 seems to force set uid 1.
+  supplementalGroups:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 1
+        max: 65535
+  fsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      # Forbid adding the root group.
+      - min: 1
+        max: 65535
+  readOnlyRootFilesystem: true
+
+  # Default that must be set
+  seLinux:
+    rule: RunAsAny
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: psp:unprivileged
+  namespace: wild-west
+rules:
+  - apiGroups:
+      - extensions
+    resourceNames:
+      - restricted
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: default:psp:unprivileged
+  namespace: wild-west
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: psp:unprivileged
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: wild-west
+
+# imperative equivalent:
+#
+#  kubectl create role psp:unprivileged \
+#  --verb=use \
+#  --resource=podsecuritypolicy \
+#  --resource-name=restricted
+#
+#  kubectl create rolebinding default:psp:unprivileged \
+#  --role=psp:unprivileged \
+#  --serviceaccount=wild-west:default
