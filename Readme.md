@@ -21,6 +21,10 @@ In order to use this,  you need to
 * set your GKE `ZONE` and `PROJECT` in `config.sh`  
   (alternatively, you can set `ZONE` and `PROJECT` env vars).
 
+Note that you can also set `CLUSTER_VERSION` (like `1.11`) and  `MACHINE_TYPE` (like `n1-standard-2`).
+From time to time GKE drops support for older cluster versions so you might need to set a newer one, if the one in 
+`config.sh` is no longer supported at the time of execution. 
+
 # Setting up the clusters
 
 Each demo is contained in its own sub folder, where each contains a 
