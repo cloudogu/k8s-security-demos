@@ -18,7 +18,8 @@ Should also work on Mac.
 In order to use this,  you need to
 
 * setup [`gcloud`](https://cloud.google.com/sdk/install) and `kubectl` and
-* set your GKE `zone` and `project` in `config.sh`.
+* set your GKE `ZONE` and `PROJECT` in `config.sh`  
+  (alternatively, you can set `ZONE` and `PROJECT` env vars).
 
 # Setting up the clusters
 
