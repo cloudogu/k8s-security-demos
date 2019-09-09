@@ -7,7 +7,7 @@ spec:
     - Egress
   podSelector:
     matchLabels:
-      run: docker-sudo
+      app: docker-sudo
   egress:
     - to:
         - namespaceSelector: {}

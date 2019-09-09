@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-as-non-root-unprivileged
+  name: run-as-non-root-unprivileged
+spec:
+  selector:
+    matchLabels:
+      run: run-as-non-root-unprivileged
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: run-as-non-root-unprivileged
+    spec:
+      containers:
+      - image: nginxinc/nginx-unprivileged:1.17.2
+        name: run-as-non-root-unprivileged
+        securityContext:
+          runAsNonRoot: true

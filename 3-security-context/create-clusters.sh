@@ -29,8 +29,7 @@ function main() {
         --role=psp:privileged \
         --serviceaccount=wild-west:default
 
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/01-deployment-run-as-non-root.yaml
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/02-deployment-bitnami-run-as-non-root.yaml
+    kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/02-deployment-run-as-non-root-unprivileged.yaml
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/04-deployment-allow-no-privilege-escalation.yaml
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/05-deployment-read-only-fs.yaml
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/06-deployment-nginx-read-only-fs.yaml

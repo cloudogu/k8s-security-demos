@@ -16,7 +16,7 @@ spec:
         run: empty-dirs-nginx-read-only-fs
     spec:
       containers:
-        - image: nginx:1.15.8
+        - image: nginx:1.17.2
           name: empty-dirs-nginx-read-only-fs
           securityContext:
             readOnlyRootFilesystem: true

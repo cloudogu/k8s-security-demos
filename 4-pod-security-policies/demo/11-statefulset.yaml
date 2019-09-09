@@ -13,6 +13,6 @@ spec:
         run: stateful
     spec:
       containers:
-        - image: nginx:1.15.8
+        - image: nginx:1.17.2
           name: stateful
           securityContext: {}
