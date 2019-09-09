@@ -17,6 +17,7 @@ cd demo
 kubectl delete rolebinding default:psp:privileged
 kubectl delete pod --all
 kubectl get pod
+# No pods started -> See replica sets for errors
 kubectl describe rs $(kubectl get rs  | awk '/nginx-read-only-fs-empty-dirs/ {print $1;exit}') | grep Error
 # Error creating: pods "nginx-read-only-fs-empty-dirs-f7676b7d8-" is forbidden: unable to validate against any pod security policy: []
 # replicasets are no longer allowed to schedule pods
@@ -37,13 +38,13 @@ kubectl apply -f 10a-psp-whitelist.yaml
 # Use service account for nginx pod 
 cat 10b-patch-nginx-service-account.yaml
 kubectl patch deployment nginx --patch "$(cat 10b-patch-nginx-service-account.yaml)"
-kubectl delete pod $(kubectl get pods  | awk '/nginx/ {print $1;exit}')
+kubectl delete pod $(kubectl get pods  | awk '/^nginx/ {print $1;exit}')
 # Now runs again
-kubectl get pod $(kubectl get pods  | awk '/nginx/ {print $1;exit}') 
+kubectl get pod $(kubectl get pods  | awk '/^nginx/ {print $1;exit}') 
 
 # statefulsets are also restricted by psp
 cat 11-statefulset.yaml
-kubectl logs stateful-0
+kubectl describe statefulset stateful | grep error
 ```
 
 
