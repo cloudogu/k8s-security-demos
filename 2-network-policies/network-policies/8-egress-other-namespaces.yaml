@@ -1,4 +1,3 @@
-# TODO these policies result in prometheus no longer being able to scrape itself and mongodb 🤔
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
@@ -12,9 +11,10 @@ spec:
     - to:
         - namespaceSelector: {}
 ---
-# For some reason, allowing IPs 10.x.x.x does not include API server, even when its within this range
+# For some reason, allowing IPs 10.0.0.0/8 does not include API server, even when its within this range
 # https://stackoverflow.com/q/50102943
 # The following is only a workaround
+# TODO even with the workaround prometheus is no longer able to scrape mongodb 🤔with these netpols
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
