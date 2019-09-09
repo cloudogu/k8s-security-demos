@@ -11,7 +11,8 @@ Should also work on Mac.
 
 1. [Role Based Access Controll (RBAC)](1-rbac/Readme.md)
 2. [Network Policies](2-network-policies/Readme.md)
-3. [Security Context and Pod Security Policies](3-security-context/Readme.md)
+3. [Security Context](3-security-context/Readme.md)
+4. [Pod Security Policies](4-pod-security-policies/Readme.md)
 
 # Prerequisites
 
