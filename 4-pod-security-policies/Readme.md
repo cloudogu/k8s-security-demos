@@ -1,6 +1,6 @@
-# Security Policy Demo
+# Pod Security Policy Demo
 
-![Clusters, Namespaces and Pods](http://www.plantuml.com/plantuml/svg/dP2nQWCn38PtFuMuGZE5qWP2nj12nXB8M3gebdgOEqk7hEDIIjwzlZH3iaQJ_Vdt_u6snT5yp7qeNP813JCaSRPlZ0o_0U0LOzUQZa9lsgl1myiALqJpYngnNUZpUhtPK3Y5go8qq-bSSllr9XGr3oeiVeSDOAVY5xOxprmUH8cXEN0SBVbFjOlpqU4HzeTzKpq1OAWYR6lg7JENUcDOJAcdvSJ55mtK5DJva3R9yVF__9LSCAUdQqOQExPb6KbdKksdi6MXkj8_)
+Note: This demo uses the same cluster as [Security Context](../3-security-context/Readme.md). 
 
 ```bash
 # Switch to proper kubectl context - alternatively use kubectx

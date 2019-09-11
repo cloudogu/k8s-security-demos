@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
+BASEDIR=$(dirname $0)
+ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
 
 PRINT_ONLY=${PRINT_ONLY:-false}
 
@@ -11,9 +13,17 @@ function main() {
 
     runAsRoot
 
+    runAsUser
+
     allowPrivilegeEscalation
 
+    activateSeccompProfile
+
+    dropCapabilities
+
     readOnlyRootFilesystem
+
+    allAtOnce
 
     echo
     message "This concludes the demo, thanks for securing your clusters!"
@@ -40,69 +50,154 @@ function runAsRoot() {
     subHeading "1.2 Same with \"runAsNonRoot: true\""
     printFile 01-deployment-run-as-non-root.yaml
     printAndRun "kubectl apply -f 01-deployment-run-as-non-root.yaml"
-    sleep 2
+    run "sleep 3"
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-as-non-root/ {print \$1;exit}')"
+    pressKeyToContinue
     echo
     printAndRun "kubectl describe pod \$(kubectl get pods  | awk '/^run-as-non-root/ {print \$1;exit}') | grep Error"
 
     subHeading "1.3 Image that runs as nginx as non-root ➜ runs as uid != 0"
     printFile 02-deployment-run-as-non-root-unprivileged.yaml
+    printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-as-non-root-unprivileged/ {print \$1;exit}')"
+    pressKeyToContinue
     printAndRun "kubectl exec \$(kubectl get pods  | awk '/run-as-non-root-unprivileged/ {print \$1;exit}') id"
 
     pressKeyToContinue
 }
 
+function runAsUser() {
+    heading "2. Run as user/group"
+
+    subHeading "2.1 Runnginx as uid/gid 100000"
+    printFile 03-deployment-run-as-user-unprivileged.yaml
+    printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-as-user-unprivileged/ {print \$1;exit}')"
+    printAndRun "kubectl exec \$(kubectl get pods  | awk '/run-as-user-unprivileged/ {print \$1;exit}') id"
+
+    subHeading "2.2 Image must be designed to work with \"runAsUser\" and \"runAsGroup\""
+    printFile 04-deployment-run-as-user.yaml
+    printAndRun "kubectl apply -f 04-deployment-run-as-user.yaml"
+    run "sleep 3"
+
+    printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-as-user/ {print \$1;exit}')"
+    echo
+    printAndRun "kubectl logs \$(kubectl get pods  | awk '/^run-as-user/ {print \$1;exit}')"
+}
+
 function allowPrivilegeEscalation() {
 
-     heading "2. allowPrivilegeEscalation"
+     heading "3. allowPrivilegeEscalation"
 
-     subHeading "2.1 Escalate privileges"
+     subHeading "3.1 Escalate privileges"
      printAndRun "kubectl create deployment docker-sudo --image schnatterer/docker-sudo:0.1"
-     sleep 1
+     run "sleep 1"
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
 
-     subHeading "2.2 Same with  \"allowPrivilegeEscalation: true\" -> escalation fails"
-     printFile 04-deployment-allow-no-privilege-escalation.yaml
+     subHeading "3.2 Same with  \"allowPrivilegeEscalation: true\" ➜ escalation fails"
+     printFile 05-deployment-allow-no-privilege-escalation.yaml
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/allow-no-privilege-escalation/ {print \$1;exit}') sudo apt update"
 
      pressKeyToContinue
 }
 
+function activateSeccompProfile() {
+
+    heading "4. Enable Seccomp default profile"
+
+    subHeading "4.1 No seccomp profile by default 😲"
+    kubectlSilent create deployment nginx --image nginx:1.17.2
+    printAndRun "kubectl exec \$(kubectl get pods  | awk '/nginx/ {print \$1;exit}') grep Seccomp /proc/1/status"
+
+     subHeading "4.2 Same with  default seccomp profile"
+     printFile 06-deployment-seccomp.yaml
+     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-with-seccomp/ {print \$1;exit}')"
+     printAndRun "kubectl exec \$(kubectl get pods  | awk '/run-with-seccomp/ {print \$1;exit}') grep Seccomp /proc/1/status"
+
+     pressKeyToContinue
+}
+
+function dropCapabilities() {
+
+    heading "5. Drop Capabilities"
+
+    subHeading "5.1 some images require capabilities"
+    printFile 07-deployment-run-without-caps.yaml
+    printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-without-caps/ {print \$1;exit}')"
+    echo
+    printAndRun "kubectl logs \$(kubectl get pods  | awk '/^run-without-caps/ {print \$1;exit}') "
+
+    message "How to find out which capabilities we need to add?"
+    printAndRun "docker run --rm --cap-drop ALL nginx:1.17.2"
+    pressKeyToContinue
+    echo
+    printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN nginx:1.17.2"
+    pressKeyToContinue
+    #printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN --cap-add CAP_NET_BIND_SERVICE nginx:1.17.2"
+    #printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN --cap-add CAP_NET_BIND_SERVICE --cap-add SETGID nginx:1.17.2"
+    #printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN --cap-add CAP_NET_BIND_SERVICE --cap-add SETGID --cap-add SETUID nginx:1.17.2"
+
+    message "... and so on and so forth. Then add the necessary caps to kubernetes:"
+    printFile 08-deployment-run-with-certain-caps.yaml
+    printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-with-certain-caps/ {print \$1;exit}')"
+
+    subHeading "5.2 Image that runs without caps"
+    printFile 09-deployment-run-without-caps-unprivileged.yaml
+    printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-without-caps-unprivileged/ {print \$1;exit}')"
+
+    pressKeyToContinue
+}
+
 function readOnlyRootFilesystem() {
 
-     heading "3. readOnlyRootFilesystem"
+     heading "6. readOnlyRootFilesystem"
+     kubectlSilent create deployment docker-sudo --image schnatterer/docker-sudo:0.1
 
-
-     subHeading "3.1 Write to container's file system"
+     subHeading "6.1 Write to container's file system"
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
 
 
-     subHeading "3.2 Same with  \"readOnlyRootFilesystem: true\" -> fails to write to temp dirs"
-     printFile 05-deployment-read-only-fs.yaml
+     subHeading "6.2 Same with  \"readOnlyRootFilesystem: true\" ➜ fails to write to temp dirs"
+     printFile 10-deployment-read-only-fs.yaml
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/^read-only-fs/ {print \$1;exit}') sudo apt update"
 
 
-     subHeading "( 3.2a By the way - this could also be done with a networkPolicy )"
-     printFile 05a-netpol-egress-docker-sudo-allow-internal-only.yaml
-     printAndRun "kubectl apply -f 05a-netpol-egress-docker-sudo-allow-internal-only.yaml"
+     subHeading "( 6.2a By the way - this could also be done with a networkPolicy )"
+     printFile 10a-netpol-egress-docker-sudo-allow-internal-only.yaml
+     printAndRun "kubectl apply -f 10a-netpol-egress-docker-sudo-allow-internal-only.yaml"
      printAndRun "timeout 10s kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
 
 
-     subHeading "3.3 readOnlyRootFilesystem causes issues with other images"
-     printFile 06-deployment-nginx-read-only-fs.yaml
+     subHeading "6.3 readOnlyRootFilesystem causes issues with other images"
+     printFile 11-deployment-nginx-read-only-fs.yaml
      printAndRun "kubectl get pod \$(kubectl get pods  | awk '/failing-nginx-read-only-fs/ {print \$1;exit}')"
-     echo
+     message "Not running. Let's check the logs"
      printAndRun "kubectl logs \$(kubectl get pods  | awk '/failing-nginx-read-only-fs/ {print \$1;exit}')"
 
      message "How to find out which folders we need to mount?"
-     printAndRun "docker run -d --rm --name nginx nginx:1.17.2"
-     sleep 1
-     printAndRun "docker diff nginx"
-     run docker rm -f nginx > /dev/null
+     printAndRun "nginxContainer=\$(docker run -d --rm nginx:1.17.2)"
+     run "sleep 1"
+     printAndRun "docker diff \${nginxContainer}"
+     run "docker rm -f \${nginxContainer} > /dev/null"
 
      message "Mount those dirs as as emptyDir!"
-     printFile 07-deployment-nginx-read-only-fs-empty-dirs.yaml
+     printFile 12-deployment-nginx-read-only-fs-empty-dirs.yaml
      printAndRun "kubectl get pod \$(kubectl get pods  | awk '/empty-dirs-nginx-read-only-fs/ {print \$1;exit}')"
+
+     pressKeyToContinue
+}
+
+function allAtOnce() {
+     heading "7. An example that implements all good practices at once"
+
+     printFile 13-deployment-all-at-once.yaml
+     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/all-at-once/ {print \$1;exit}')"
+     pressKeyToContinue
+     printAndRun "kubectl port-forward \$(kubectl get pods  | awk '/all-at-once/ {print \$1;exit}') 8080 > /dev/null &"
+     run "sleep 2"
+     pressKeyToContinue
+     printAndRun "curl localhost:8080"
+     run "jobs > /dev/null && kill %1"
+
+     pressKeyToContinue
 }
 
 function heading() {
@@ -153,17 +248,18 @@ function printFile() {
 }
 
 function reset() {
-    if [[ "${PRINT_ONLY}" != "true" ]]; then
-        # Reset the changes done by this demo
-        kubectlSilent delete deploy nginx
-        kubectlSilent delete -f 01-deployment-run-as-non-root.yaml
-        kubectlSilent delete deploy docker-sudo
-        kubectlSilent delete netpol egress-nginx-allow-internal-only
-    fi
+      # Reset the changes done by this demo
+      kubectlSilent delete deploy nginx
+      kubectlSilent delete -f 01-deployment-run-as-non-root.yaml
+      kubectlSilent delete -f 04-deployment-run-as-user.yaml
+      kubectlSilent delete deploy docker-sudo
+      kubectlSilent delete netpol egress-nginx-allow-internal-only
 }
 
 function kubectlSilent() {
-    kubectl "$@" > /dev/null 2>&1 || true
+    if [[ "${PRINT_ONLY}" != "true" ]]; then
+      kubectl "$@" > /dev/null 2>&1 || true
+    fi
 }
 
 

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-with-certain-caps
+  name: run-with-certain-caps
+spec:
+  selector:
+    matchLabels:
+      run: run-with-certain-caps
+  template:
+    metadata:
+      labels:
+        run: run-with-certain-caps
+    spec:
+      containers:
+      - image: nginx:1.17.2
+        name: run-with-certain-caps
+        securityContext:
+          capabilities:
+            drop:
+              - ALL
+            add:
+              - CHOWN
+              - NET_BIND_SERVICE
+              - SETGID
+              - SETUID

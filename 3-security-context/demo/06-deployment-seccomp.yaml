@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-with-seccomp
+  name: run-with-seccomp
+spec:
+  selector:
+    matchLabels:
+      run: run-with-seccomp
+  template:
+    metadata:
+      labels:
+        run: run-with-seccomp
+      annotations:
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default
+    spec:
+      containers:
+      - image: nginx:1.17.2
+        name: run-with-seccomp

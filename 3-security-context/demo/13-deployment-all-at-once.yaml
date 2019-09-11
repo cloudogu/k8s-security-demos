@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: all-at-once
+  name: all-at-once
+spec:
+  selector:
+    matchLabels:
+      run: all-at-once
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: all-at-once
+      annotations:
+        seccomp.security.alpha.kubernetes.io/pod: runtime/default 
+    spec:
+      containers:
+          # Another suitable example springcommunity/spring-framework-petclinic:5.1.5
+        - image: nginxinc/nginx-unprivileged:1.17.2
+          name: all-at-once
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 100000
+            runAsGroup: 100000
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

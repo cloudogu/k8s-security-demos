@@ -76,9 +76,13 @@ function clusterExists() {
 }
 
 function becomeClusterAdmin() {
-    kubectl create clusterrolebinding myname-cluster-admin-binding \
+    kubectlIdempotent create clusterrolebinding myname-cluster-admin-binding \
       --clusterrole=cluster-admin \
       --user=$(gcloud info | grep Account  | sed -r 's/Account\: \[(.*)\]/\1/')
+}
+
+function kubectlIdempotent() {
+    kubectl "$@" --dry-run -o yaml | kubectl apply -f -
 }
 
 function podReady() {

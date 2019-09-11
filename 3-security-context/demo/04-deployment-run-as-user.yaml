@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-as-user
+  name: run-as-user
+spec:
+  selector:
+    matchLabels:
+      run: run-as-user
+  template:
+    metadata:
+      labels:
+        run: run-as-user
+    spec:
+      containers:
+      - image: nginx:1.17.2
+        name: run-as-user
+        securityContext:
+          runAsUser: 100000
+          runAsGroup: 100000

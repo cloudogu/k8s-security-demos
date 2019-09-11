@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-without-caps
+  name: run-without-caps
+spec:
+  selector:
+    matchLabels:
+      run: run-without-caps
+  template:
+    metadata:
+      labels:
+        run: run-without-caps
+    spec:
+      containers:
+      - image: nginx:1.17.2
+        name: run-without-caps
+        securityContext:
+          capabilities:
+            drop:
+              - ALL

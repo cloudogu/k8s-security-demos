@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-without-caps-unprivileged
+  name: run-without-caps-unprivileged
+spec:
+  selector:
+    matchLabels:
+      run: run-without-caps-unprivileged
+  template:
+    metadata:
+      labels:
+        run: run-without-caps-unprivileged
+    spec:
+      containers:
+      - image: nginxinc/nginx-unprivileged:1.17.2
+        name: run-without-caps-unprivileged
+        securityContext:
+          capabilities:
+            drop:
+              - ALL

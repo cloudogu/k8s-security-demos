@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: run-as-user-unprivileged
+  name: run-as-user-unprivileged
+spec:
+  selector:
+    matchLabels:
+      run: run-as-user-unprivileged
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        run: run-as-user-unprivileged
+    spec:
+      containers:
+      - image: nginxinc/nginx-unprivileged:1.17.2
+        name: run-as-user-unprivileged
+        securityContext:
+          runAsUser: 100000
+          runAsGroup: 100000
