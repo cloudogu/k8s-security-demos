@@ -81,6 +81,8 @@ function runAsUser() {
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-as-user/ {print \$1;exit}')"
     echo
     printAndRun "kubectl logs \$(kubectl get pods  | awk '/^run-as-user/ {print \$1;exit}')"
+
+    pressKeyToContinue
 }
 
 function allowPrivilegeEscalation() {
@@ -90,6 +92,7 @@ function allowPrivilegeEscalation() {
      subHeading "3.1 Escalate privileges"
      printAndRun "kubectl create deployment docker-sudo --image schnatterer/docker-sudo:0.1"
      run "sleep 1"
+     printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') id"
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
 
      subHeading "3.2 Same with  \"allowPrivilegeEscalation: true\" ➜ escalation fails"
@@ -161,10 +164,18 @@ function readOnlyRootFilesystem() {
 
 
      subHeading "( 6.2a By the way - this could also be done with a networkPolicy )"
-     printFile 10a-netpol-egress-docker-sudo-allow-internal-only.yaml
-     printAndRun "kubectl apply -f 10a-netpol-egress-docker-sudo-allow-internal-only.yaml"
-     printAndRun "timeout 10s kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
+     read -p "Want to see? y/n [n]" answer
+     while true
+      do
+        case ${answer} in
+         [yY]* ) printFile 10a-netpol-egress-docker-sudo-allow-internal-only.yaml
+                 printAndRun "kubectl apply -f 10a-netpol-egress-docker-sudo-allow-internal-only.yaml"
+                 printAndRun "timeout 10s kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
+                 break;;
 
+         * )     break ;;
+        esac
+      done
 
      subHeading "6.3 readOnlyRootFilesystem causes issues with other images"
      printFile 11-deployment-nginx-read-only-fs.yaml
@@ -187,6 +198,7 @@ function readOnlyRootFilesystem() {
 
 function allAtOnce() {
      heading "7. An example that implements all good practices at once"
+     pressKeyToContinue
 
      printFile 13-deployment-all-at-once.yaml
      printAndRun "kubectl get pod \$(kubectl get pods  | awk '/all-at-once/ {print \$1;exit}')"
