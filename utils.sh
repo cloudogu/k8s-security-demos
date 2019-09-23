@@ -60,7 +60,6 @@ function createCluster() {
           --image-type "COS" \
           --disk-type "pd-standard" --disk-size "100" \
           --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" \
-          --enable-cloud-monitoring \
           --no-enable-ip-alias \
           ${ADDITIONAL_ARGS}
     fi
@@ -85,22 +84,6 @@ function kubectlIdempotent() {
     kubectl "$@" --dry-run -o yaml | kubectl apply -f -
 }
 
-function podReady() {
-    local POD_NAME="$1"
-    local NAMESPACE="$2"
-
-
-
-
-    if [[ -z "${IS_READY}" ]]
-    then
-        return 1
-    else
-        return 0
-     fi
-# Checks if a pod (name is a wildcard match) is ready. Only works reliably if there is only one pod with that name.
-}
-
 function waitForPodReady() {
 
     local POD_NAME="$1"
@@ -113,4 +96,6 @@ function waitForPodReady() {
         echo "Waiting for pod ${POD_NAME} in namespace ${NAMESPACE} to become ready"
         sleep 1
     done
+    # For some reasons pods still refuse after they are ready :-/
+    sleep 1
 }

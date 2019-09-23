@@ -17,12 +17,12 @@ function main() {
 
     kubectl apply -f ${ABSOLUTE_BASEDIR}/namespaces
     # Assign label to kube-system namespace so we can match it in network policies
-    kubectl label namespace/kube-system namespace=kube-system
+    kubectlIdempotent label namespace/kube-system namespace=kube-system --overwrite
 
     helm init
-    kubectl create serviceaccount --namespace kube-system tiller
-    kubectl create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-    kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+    kubectlIdempotent create serviceaccount --namespace kube-system tiller
+    kubectlIdempotent create clusterrolebinding tiller-cluster-rule --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+    kubectlIdempotent patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
     waitForPodReady tiller kube-system
 
     kubectl apply -f ${ABSOLUTE_BASEDIR}/traefik/traefik-basic-console-basic-auth-secret.yaml
