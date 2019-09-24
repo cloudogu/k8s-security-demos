@@ -41,8 +41,6 @@ function main() {
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/11-deployment-nginx-read-only-fs.yaml
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/12-deployment-nginx-read-only-fs-empty-dirs.yaml
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/13-deployment-all-at-once.yaml
-
-    kubectl apply -f ${PSPDIR}/11-statefulset.yaml
 }
 
 main "$@"

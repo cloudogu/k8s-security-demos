@@ -3,26 +3,48 @@ apiVersion: policy/v1beta1
 kind: PodSecurityPolicy
 metadata:
   name: restricted
+  annotations:
+    seccomp.security.alpha.kubernetes.io/defaultProfileName:  'runtime/default'
+    # Not setting this will result in blocking pods that have this profile set explicitly
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'runtime/default'
+
+    apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
+    apparmor.security.beta.kubernetes.io/allowedProfileNames:  'runtime/default'
 spec:
+  allowedHostPaths: []
+  hostIPC: false
+  hostNetwork: false
+  hostPID: false
+  hostPorts: []
+
+  requiredDropCapabilities:
+    - ALL
+  allowedCapabilities: []
+
   privileged: false
+  defaultAllowPrivilegeEscalation: false
   allowPrivilegeEscalation: false
-  # Otherwise configmaps, secrets, etc. are not allowed to be used
+  # Allow core volume types. But more specifically, don't allow mounting host volumes to include the Docker socket - '/var/run/docker.sock'
+  # https://kurtmadel.com/posts/native-kubernetes-continuous-delivery/building-container-images-with-kubernetes/
+  # Without the "volumes" block configmaps, secrets, etc. are not allowed to be used
   volumes:
-    - '*'
+    - 'configMap'
+    - 'emptyDir'
+    - 'projected'
+    - 'secret'
+    - 'downwardAPI'
   runAsUser:
     rule: 'MustRunAsNonRoot' # Note that this also forces as numeric uid!
-    # ranges: 1..65535 seems to force set uid 1.
   supplementalGroups:
     rule: 'MustRunAs'
     ranges:
-      - min: 1
-        max: 65535
+      - min: 100000
+        max: 999999
   fsGroup:
     rule: 'MustRunAs'
     ranges:
-      # Forbid adding the root group.
-      - min: 1
-        max: 65535
+      - min: 100000
+        max: 999999
   readOnlyRootFilesystem: true
 
   # Default that must be set
