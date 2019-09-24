@@ -8,8 +8,8 @@ PRINT_ONLY=${PRINT_ONLY:-false}
 function main() {
 
     setup
-
     reset
+    run "clear"
 
     runAsRoot
 
@@ -31,13 +31,17 @@ function main() {
 
 function setup() {
 
+    run "echo Setting up environment for interactive demo 'security context'"
+
     source ../../config.sh
 
     run "gcloud -q --no-user-output-enabled container clusters get-credentials ${CLUSTER3} \
         --zone ${ZONE} \
         --project ${PROJECT}"
+    run "echo -n ."
 
     run "kubectl config set-context \$(kubectl config current-context) --namespace=wild-west > /dev/null"
+    run "echo -n ."
 }
 
 function runAsRoot() {
@@ -262,9 +266,13 @@ function printFile() {
 function reset() {
       # Reset the changes done by this demo
       kubectlSilent delete deploy nginx
+      run "echo -n ."
       kubectlSilent delete -f 01-deployment-run-as-non-root.yaml
+      run "echo -n ."
       kubectlSilent delete -f 04-deployment-run-as-user.yaml
+      run "echo -n ."
       kubectlSilent delete deploy docker-sudo
+      run "echo -n ."
       kubectlSilent delete netpol egress-nginx-allow-internal-only
 }
 
