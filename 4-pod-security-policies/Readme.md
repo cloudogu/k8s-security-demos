@@ -18,13 +18,13 @@ kubectl delete rolebinding default:psp:privileged
 kubectl delete pod --all
 kubectl get pod
 # No pods started -> See replica sets for errors
-kubectl describe rs $(kubectl get rs  | awk '/nginx-read-only-fs-empty-dirs/ {print $1;exit}') | grep Error
+kubectl describe rs $(kubectl get rs  | awk '/all-at-once/ {print $1;exit}') | grep Error
 # Error creating: pods "nginx-read-only-fs-empty-dirs-f7676b7d8-" is forbidden: unable to validate against any pod security policy: []
 # replicasets are no longer allowed to schedule pods
 
 # Use the PSP that is more restrictive
-cat 09-psp-more-restrictive.yaml
-kubectl apply -f 09-psp-more-restrictive.yaml
+cat 01-psp-more-restrictive.yaml
+kubectl apply -f 01-psp-more-restrictive.yaml
 # Delete replica sets -> Deployments create new ones which adhere to new PSP
 kubectl delete rs --all
 watch kubectl get pods
@@ -33,17 +33,17 @@ kubectl get pod $(kubectl get pods  | awk '/nginx/ {print $1;exit}') -o yaml --e
 # The new ReplicaSets set the securityContext adhering to PSP -> e.g. original nginx image cannot run as uid 1
 
 ### One option: "Whitelist" pod to use privileged psp
-cat 10a-psp-whitelist.yaml
-kubectl apply -f 10a-psp-whitelist.yaml
+cat 02a-psp-whitelist.yaml
+kubectl apply -f 02a-psp-whitelist.yaml
 # Use service account for nginx pod 
-cat 10b-patch-nginx-service-account.yaml
-kubectl patch deployment nginx --patch "$(cat 10b-patch-nginx-service-account.yaml)"
+cat 02b-patch-nginx-service-account.yaml
+kubectl patch deployment nginx --patch "$(cat 02b-patch-nginx-service-account.yaml)"
 kubectl delete pod $(kubectl get pods  | awk '/^nginx/ {print $1;exit}')
 # Now runs again
 kubectl get pod $(kubectl get pods  | awk '/^nginx/ {print $1;exit}') 
 
 # statefulsets are also restricted by psp
-cat 11-statefulset.yaml
+cat 03-statefulset.yaml
 kubectl describe statefulset stateful | grep error
 ```
 
