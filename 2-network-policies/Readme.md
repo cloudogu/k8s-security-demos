@@ -19,7 +19,13 @@ source ../config.sh
 gcloud container clusters get-credentials ${CLUSTER2} \
     --zone ${ZONE} \
     --project ${PROJECT}
-        
+## Reset
+kubectl delete netpol --all -n production
+kubectl delete netpol --all -n default
+kubectl delete netpol --all -n kube-system
+kubectl delete netpol --all -n monitoring
+
+
 #### All traffic is allowed
 # http://web-console
 curl --output /tmp/mongo.tgz https://downloads.mongodb.org/linux/mongodb-shell-linux-x86_64-3.4.18.tgz && tar xf /tmp/mongo.tgz -C /tmp
