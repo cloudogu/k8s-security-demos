@@ -95,8 +95,10 @@ function allowPrivilegeEscalation() {
 
      subHeading "3.1 Escalate privileges"
      printAndRun "kubectl create deployment docker-sudo --image schnatterer/docker-sudo:0.1"
-     run "sleep 1"
+     run "kubectl rollout status deployment docker-sudo > /dev/null"
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') id"
+     pressKeyToContinue
+
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
 
      subHeading "3.2 Same with  \"allowPrivilegeEscalation: true\" ➜ escalation fails"
@@ -207,8 +209,8 @@ function allAtOnce() {
      printFile 13-deployment-all-at-once.yaml
      printAndRun "kubectl get pod \$(kubectl get pods  | awk '/all-at-once/ {print \$1;exit}')"
      pressKeyToContinue
-     printAndRun "kubectl port-forward \$(kubectl get pods  | awk '/all-at-once/ {print \$1;exit}') 8080 > /dev/null &"
-     run "sleep 2"
+     printAndRun "kubectl port-forward \$(kubectl get pods  | awk '/all-at-once/ {print \$1;exit}') 8080 > /dev/null& "
+     run "wget -O- --retry-connrefused --tries=30 -q --wait=1 localhost:8080 > /dev/null"
      pressKeyToContinue
      printAndRun "curl localhost:8080"
      run "jobs > /dev/null && kill %1"
