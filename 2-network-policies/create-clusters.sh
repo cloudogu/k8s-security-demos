@@ -26,7 +26,7 @@ function main() {
     waitForPodReady tiller kube-system
 
     kubectl apply -f ${ABSOLUTE_BASEDIR}/traefik/traefik-basic-console-basic-auth-secret.yaml
-    helm install --name traefik --namespace kube-system --version 1.59.2 \
+    helm upgrade --install traefik --namespace kube-system --version 1.59.2 \
         --values ${ABSOLUTE_BASEDIR}/traefik/values.yaml \
         stable/traefik
 
@@ -38,7 +38,7 @@ function main() {
     writeEtcHosts "${externalIp}" "$(findIngressHostname "web-console" "default")"
 
     kubectl apply -f ${ABSOLUTE_BASEDIR}/prometheus/prometheus-basic-auth-secret.yaml
-    helm install --name prometheus --namespace=monitoring --version 7.1.0 \
+    helm upgrade --install prometheus --namespace=monitoring --version 7.1.0 \
         --values ${ABSOLUTE_BASEDIR}/prometheus/values.yaml \
         stable/prometheus
 
