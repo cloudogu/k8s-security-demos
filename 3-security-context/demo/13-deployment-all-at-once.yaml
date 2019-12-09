@@ -17,6 +17,8 @@ spec:
       annotations:
         seccomp.security.alpha.kubernetes.io/pod: runtime/default 
     spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
       containers:
           # Another suitable example springcommunity/spring-framework-petclinic:5.1.5
         - image: nginxinc/nginx-unprivileged:1.17.2

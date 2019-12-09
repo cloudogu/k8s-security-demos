@@ -17,6 +17,8 @@ function main() {
 
     allowPrivilegeEscalation
 
+    enableServiceLinks
+
     activateSeccompProfile
 
     dropCapabilities
@@ -108,15 +110,32 @@ function allowPrivilegeEscalation() {
      pressKeyToContinue
 }
 
+function enableServiceLinks() {
+
+  heading "4. enableServiceLinks"
+
+  subHeading "4.1 Show service links"
+  printAndRun "kubectl create service clusterip my-service --tcp=80:8080 || true"
+  printAndRun "kubectl run tmp-env --generator=run-pod/v1 --image busybox:1.31.1-musl --command sleep 100000"
+  pressKeyToContinue
+  printAndRun "kubectl exec tmp-env env | grep -i my"
+
+  subHeading "4.2 Disable service links"
+  printAndRun "kubectl run tmp-env2 --generator=run-pod/v1 --image busybox:1.31.1-musl --overrides='{\"spec\": {\"enableServiceLinks\": false}}' --command sleep 100000"
+  pressKeyToContinue
+  printAndRun "kubectl exec tmp-env2 env"
+  pressKeyToContinue
+}
+
 function activateSeccompProfile() {
 
-    heading "4. Enable Seccomp default profile"
+    heading "5. Enable Seccomp default profile"
 
-    subHeading "4.1 No seccomp profile by default 😲"
+    subHeading "5.1 No seccomp profile by default 😲"
     kubectlSilent create deployment nginx --image nginx:1.17.2
     printAndRun "kubectl exec \$(kubectl get pods  | awk '/nginx/ {print \$1;exit}') grep Seccomp /proc/1/status"
 
-     subHeading "4.2 Same with  default seccomp profile"
+     subHeading "5.2 Same with  default seccomp profile"
      printFile 06-deployment-seccomp.yaml
      printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-with-seccomp/ {print \$1;exit}')"
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/run-with-seccomp/ {print \$1;exit}') grep Seccomp /proc/1/status"
@@ -126,9 +145,9 @@ function activateSeccompProfile() {
 
 function dropCapabilities() {
 
-    heading "5. Drop Capabilities"
+    heading "6. Drop Capabilities"
 
-    subHeading "5.1 some images require capabilities"
+    subHeading "6.1 some images require capabilities"
     printFile 07-deployment-run-without-caps.yaml
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-without-caps/ {print \$1;exit}')"
     echo
@@ -148,7 +167,7 @@ function dropCapabilities() {
     printFile 08-deployment-run-with-certain-caps.yaml
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-with-certain-caps/ {print \$1;exit}')"
 
-    subHeading "5.2 Image that runs without caps"
+    subHeading "6.2 Image that runs without caps"
     printFile 09-deployment-run-without-caps-unprivileged.yaml
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-without-caps-unprivileged/ {print \$1;exit}')"
 
@@ -157,19 +176,19 @@ function dropCapabilities() {
 
 function readOnlyRootFilesystem() {
 
-     heading "6. readOnlyRootFilesystem"
+     heading "7. readOnlyRootFilesystem"
      kubectlSilent create deployment docker-sudo --image schnatterer/docker-sudo:0.1
 
-     subHeading "6.1 Write to container's file system"
+     subHeading "7.1 Write to container's file system"
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
 
 
-     subHeading "6.2 Same with  \"readOnlyRootFilesystem: true\" ➜ fails to write to temp dirs"
+     subHeading "7.2 Same with  \"readOnlyRootFilesystem: true\" ➜ fails to write to temp dirs"
      printFile 10-deployment-read-only-fs.yaml
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/^read-only-fs/ {print \$1;exit}') sudo apt update"
 
 
-     subHeading "( 6.2a By the way - this could also be done with a networkPolicy )"
+     subHeading "( 7.2a By the way - this could also be done with a networkPolicy )"
      read -p "Want to see? y/n [n]" answer
      while true
       do
@@ -183,7 +202,7 @@ function readOnlyRootFilesystem() {
         esac
       done
 
-     subHeading "6.3 readOnlyRootFilesystem causes issues with other images"
+     subHeading "7.3 readOnlyRootFilesystem causes issues with other images"
      printFile 11-deployment-nginx-read-only-fs.yaml
      printAndRun "kubectl get pod \$(kubectl get pods  | awk '/failing-nginx-read-only-fs/ {print \$1;exit}')"
      message "Not running. Let's check the logs"
@@ -203,7 +222,7 @@ function readOnlyRootFilesystem() {
 }
 
 function allAtOnce() {
-     heading "7. An example that implements all good practices at once"
+     heading "8. An example that implements all good practices at once"
      pressKeyToContinue
 
      printFile 13-deployment-all-at-once.yaml
@@ -276,6 +295,12 @@ function reset() {
       kubectlSilent delete deploy docker-sudo
       run "echo -n ."
       kubectlSilent delete netpol egress-nginx-allow-internal-only
+      run "echo -n ."
+      kubectlSilent delete po tmp-env --grace-period=0 --force
+      run "echo -n ."
+      kubectlSilent delete po tmp-env2 --grace-period=0 --force
+      run "echo -n ."
+      kubectlSilent delete svc my-service
 }
 
 function kubectlSilent() {
