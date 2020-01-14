@@ -52,10 +52,9 @@ spec:
     rule: RunAsAny
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
+kind: ClusterRole
 metadata:
-  name: psp:unprivileged
-  namespace: wild-west
+  name: podsecuritypolicy:privileged
 rules:
   - apiGroups:
       - extensions
@@ -66,27 +65,17 @@ rules:
     verbs:
       - use
 ---
+# Allows all serviceAccounts to use this restricted PSP. 
+# If a pod should need more privileges, this could be granted via a PSP, SA, Role and RoleBinding within its namespace.
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-  name: default:psp:unprivileged
-  namespace: wild-west
+  name: podsecuritypolicy:all-serviceaccounts
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: psp:unprivileged
+  kind: ClusterRole
+  name: podsecuritypolicy:privileged
 subjects:
-  - kind: ServiceAccount
-    name: default
-    namespace: wild-west
-
-# imperative equivalent:
-#
-#  kubectl create role psp:unprivileged \
-#  --verb=use \
-#  --resource=podsecuritypolicy \
-#  --resource-name=restricted
-#
-#  kubectl create rolebinding default:psp:unprivileged \
-#  --role=psp:unprivileged \
-#  --serviceaccount=wild-west:default
+  - apiGroup: rbac.authorization.k8s.io
+    kind: Group
+    name: system:serviceaccounts

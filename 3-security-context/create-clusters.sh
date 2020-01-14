@@ -22,13 +22,13 @@ function main() {
 
     # Start with a privileged PSP. Makes sure deployments are allowed to create pods
     kubectl apply -f ${PSPDIR}/psp-privileged.yaml
-    kubectlIdempotent create role psp:privileged \
+    kubectlIdempotent create clusterrole psp-privileged \
         --verb=use \
         --resource=podsecuritypolicy \
         --resource-name=privileged
-    kubectlIdempotent create rolebinding default:psp:privileged \
-        --role=psp:privileged \
-        --serviceaccount=wild-west:default
+    kubectlIdempotent create clusterrolebinding default-psp \
+        --clusterrole=psp-privileged \
+        --group system:serviceaccounts
 
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/02-deployment-run-as-non-root-unprivileged.yaml
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/03-deployment-run-as-user-unprivileged.yaml

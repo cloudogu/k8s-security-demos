@@ -20,7 +20,7 @@ kubectl create deployment nginx --image nginx:1.17.2 --dry-run -o yaml | kubectl
 kubectl get pod $(kubectl get pod  | awk '/^nginx/ {print $1;exit}')
 
 # Remove privilege PSP as default
-kubectl delete rolebinding default:psp:privileged
+kubectl delete clusterrolebinding default-psp
 kubectl delete pod --all
 kubectl get pod
 # No pods started -> See replica sets for errors
@@ -30,7 +30,9 @@ kubectl describe rs $(kubectl get rs  | awk '/all-at-once/ {print $1;exit}') | g
 
 # Use PSP that is more restrictive
 cat 01-psp-restrictive.yaml
-kubectl apply -f 01-psp-restrictive.yaml
+kubectl apply -f 01-psp-restrictive.yaml 
+
+
 # Delete replica sets -> Deployments create new ones which adhere to new PSP
 kubectl delete rs --all
 watch kubectl get pods
