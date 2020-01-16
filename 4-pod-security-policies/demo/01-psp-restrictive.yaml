@@ -55,7 +55,7 @@ spec:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: podsecuritypolicy:privileged
+  name: podsecuritypolicy:restricted
 rules:
   - apiGroups:
       - extensions
@@ -75,7 +75,7 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: podsecuritypolicy:privileged
+  name: podsecuritypolicy:restricted
 subjects:
   - apiGroup: rbac.authorization.k8s.io
     kind: Group
