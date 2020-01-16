@@ -33,6 +33,7 @@ spec:
     - 'projected'
     - 'secret'
     - 'downwardAPI'
+    - 'persistentVolumeClaim'
   runAsUser:
     rule: 'MustRunAsNonRoot' # Note that this also forces as numeric uid!
   supplementalGroups:
