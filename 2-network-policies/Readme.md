@@ -10,6 +10,7 @@
 * But: Ingress not working, mongo not reachable
 * Whitelist
 * Advanced ingress and egress topics
+* See the [network-policies](network-policies) folder for YAML representation of the applied Network Policies.
 
 ## Demo Listing
 
