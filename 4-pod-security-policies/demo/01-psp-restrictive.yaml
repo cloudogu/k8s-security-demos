@@ -35,7 +35,10 @@ spec:
     - 'downwardAPI'
     - 'persistentVolumeClaim'
   runAsUser:
-    rule: 'MustRunAsNonRoot' # Note that this also forces as numeric uid!
+    rule: 'MustRunAs'
+    ranges:
+      - min: 100000
+        max: 999999
   supplementalGroups:
     rule: 'MustRunAs'
     ranges:
