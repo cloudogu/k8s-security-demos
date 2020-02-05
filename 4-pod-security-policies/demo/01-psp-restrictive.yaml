@@ -28,17 +28,22 @@ spec:
   # https://kurtmadel.com/posts/native-kubernetes-continuous-delivery/building-container-images-with-kubernetes/
   # Without the "volumes" block configmaps, secrets, etc. are not allowed to be used
   volumes:
-    - 'configMap'
-    - 'emptyDir'
-    - 'projected'
-    - 'secret'
-    - 'downwardAPI'
-    - 'persistentVolumeClaim'
+    - configMap
+    - emptyDir
+    - projected
+    - secret
+    - downwardAPI
+    - persistentVolumeClaim
   runAsUser:
     rule: 'MustRunAs'
     ranges:
       - min: 100000
         max: 999999
+  runAsGroup:
+    rule: 'MustRunAs'
+    ranges:
+      - min: 100000
+        max: 999999 
   supplementalGroups:
     rule: 'MustRunAs'
     ranges:
