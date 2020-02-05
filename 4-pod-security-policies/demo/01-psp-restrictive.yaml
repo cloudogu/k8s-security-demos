@@ -4,12 +4,12 @@ kind: PodSecurityPolicy
 metadata:
   name: restricted
   annotations:
-    seccomp.security.alpha.kubernetes.io/defaultProfileName:  'runtime/default'
+    seccomp.security.alpha.kubernetes.io/defaultProfileName: runtime/default
     # Not setting this will result in blocking pods that have this profile set explicitly
-    seccomp.security.alpha.kubernetes.io/allowedProfileNames: 'runtime/default'
+    seccomp.security.alpha.kubernetes.io/allowedProfileNames: runtime/default
 
-    apparmor.security.beta.kubernetes.io/defaultProfileName:  'runtime/default'
-    apparmor.security.beta.kubernetes.io/allowedProfileNames:  'runtime/default'
+    apparmor.security.beta.kubernetes.io/defaultProfileName: runtime/default
+    apparmor.security.beta.kubernetes.io/allowedProfileNames: runtime/default
 spec:
   allowedHostPaths: []
   hostIPC: false
@@ -35,22 +35,22 @@ spec:
     - downwardAPI
     - persistentVolumeClaim
   runAsUser:
-    rule: 'MustRunAs'
+    rule: MustRunAs
     ranges:
       - min: 100000
         max: 999999
   runAsGroup:
-    rule: 'MustRunAs'
+    rule: MustRunAs
     ranges:
       - min: 100000
         max: 999999 
   supplementalGroups:
-    rule: 'MustRunAs'
+    rule: MustRunAs
     ranges:
       - min: 100000
         max: 999999
   fsGroup:
-    rule: 'MustRunAs'
+    rule: MustRunAs
     ranges:
       - min: 100000
         max: 999999
