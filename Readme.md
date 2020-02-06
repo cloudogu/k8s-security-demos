@@ -6,6 +6,8 @@ Initially, these demos were developed during the preparation for the
 ["3 things every developer should know about K8s security"](https://github.com/cloudogu/k8s-security-3-things) talk by 
 [schnatterer](http://github.com/schnatterer/).
 
+See also our [series of blog posts](#blog-posts) on the topic.
+
 Tested to run on Google Kubernetes Engine (GKE) with a local Linux machine.
 Should also work on Mac.
 
@@ -53,3 +55,23 @@ It's a demo after all! 😉
 # Cleanup
 
 In order to destroy all cluster, call `delete-clusters.sh`.
+
+# Blog Posts
+
+![](https://cloudogu.com/assets/blog/2019/Icon_K8Apps-1b648cccc5fe798e6e39e7a2471728e35e0ba6c8491fc281458da5b222a29513.png)
+
+The examples evolved further while working on an article series called "Kubernetes AppOps Security" published in German Magazin JavaSPEKTRUM. Both English translation and German original can be found on the Cloudogu Blog.
+
+* 05/2019
+  * [🇬🇧 Network Policies - Part 1 - Good Practices](https://cloudogu.com/en/blog/k8s-app-ops-part-1)
+  * [🇩🇪 Network Policies - Teil 1 - Good Practices](https://cloudogu.com/de/blog/k8s-app-ops-teil-1)
+* 06/2019
+  * [🇬🇧 Network Policies - Part 2 - Advanced Topics and Tips](https://cloudogu.com/en/blog/k8s-app-ops-part-2)
+  * [🇩🇪 Network Policies - Teil 2 - Fortgeschrittene Themen und Tipps](https://cloudogu.com/de/blog/k8s-app-ops-teil-2)
+* 01/2020
+  * 🇬🇧 Security Context – Part 1: Good Practices
+  * 🇩🇪 Security Context – Teil 1: Good Practices
+* 02/2020
+  * 🇬🇧 Security Context - Background
+  * 🇩🇪 Security Context - Hintergründe
+* To be continued with PodSecurityPolicies
