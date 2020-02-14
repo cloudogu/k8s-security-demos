@@ -1,3 +1,5 @@
+![](https://cloudogu.com/assets/blog/2019/Icon_K8Apps-1b648cccc5fe798e6e39e7a2471728e35e0ba6c8491fc281458da5b222a29513.png)
+
 # Kubernetes Security Demos
 
 The following demos showcase several Kubernetes security features.
@@ -57,8 +59,6 @@ It's a demo after all! 😉
 In order to destroy all cluster, call `delete-clusters.sh`.
 
 # Blog Posts
-
-![](https://cloudogu.com/assets/blog/2019/Icon_K8Apps-1b648cccc5fe798e6e39e7a2471728e35e0ba6c8491fc281458da5b222a29513.png)
 
 The examples evolved further while working on an article series called "Kubernetes AppOps Security" published in German Magazin JavaSPEKTRUM. Both English translation and German original can be found on the Cloudogu Blog.
 
