@@ -5,7 +5,7 @@ BASEDIR=$(dirname $0)
 ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
 
 source ${ABSOLUTE_BASEDIR}/config.sh
-source ${ABSOLUTE_BASEDIR}/utils.sh
+source ${ABSOLUTE_BASEDIR}/cluster-utils.sh
 
 function main() {
     deleteHostNames

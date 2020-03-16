@@ -79,13 +79,6 @@ function createCluster() {
     becomeClusterAdmin
     
     kubectl apply -f ${ABSOLUTE_BASEDIR}/${PSPDIR}/psp-privileged.yaml
-    kubectlIdempotent create clusterrole psp-privileged \
-        --verb=use \
-        --resource=podsecuritypolicy \
-        --resource-name=privileged
-    kubectlIdempotent create clusterrolebinding default-psp \
-        --clusterrole=psp-privileged \
-        --group system:serviceaccounts
 }
 
 function clusterExists() {

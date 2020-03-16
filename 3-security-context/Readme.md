@@ -8,7 +8,8 @@ You can choose between the interactive demo:
 cd demo
 ./interactive-demo.sh
 ```
-Note that the demo requires [bat](https://github.com/sharkdp/bat) for pretty printing the files.
+
+Note if you got [bat](https://github.com/sharkdp/bat) on your path, the output will prettier.
 
 Alternatively, you could print a transcript of the demo for doing the demo manually
 

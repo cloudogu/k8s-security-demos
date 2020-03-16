@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    run: nginx-unprivileged
+  name: nginx-unprivileged
+spec:
+  selector:
+    matchLabels:
+      run: nginx-unprivileged
+  template:
+    metadata:
+      labels:
+        run: nginx-unprivileged
+    spec:
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      containers:
+        - image: nginxinc/nginx-unprivileged:1.17.9
+          name: nginx-unprivileged
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

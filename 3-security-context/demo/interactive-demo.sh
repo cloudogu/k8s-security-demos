@@ -5,6 +5,8 @@ ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
 
 PRINT_ONLY=${PRINT_ONLY:-false}
 
+source ${ABSOLUTE_BASEDIR}/../../interactive-utils.sh
+
 function main() {
 
     setup
@@ -237,53 +239,6 @@ function allAtOnce() {
      pressKeyToContinue
 }
 
-function heading() {
-    echo
-    echo -e "${RED}# ${1}${NO_COLOR}"
-    echo -e "${RED}========================================${NO_COLOR}"
-}
-
-function subHeading() {
-    echo
-    echo -e "${GREEN}# ${1}${NO_COLOR}"
-    echo
-    pressKeyToContinue
-}
-
-function message() {
-    echo
-    echo -e "${GREEN}${1}${NO_COLOR}"
-    echo
-    pressKeyToContinue
-}
-
-function pressKeyToContinue() {
-    if [[ "${PRINT_ONLY}" != "true" ]]; then
-        read -n 1 -s -r -p "Press any key to continue"
-        removeOutputLine
-    fi
-}
-
-function removeOutputLine() {
-    echo -en "\r\033[K"
-}
-
-function printAndRun() {
-    echo "$ ${1}"
-    run "${1}"
-}
-
-function run() {
-    if [[ "${PRINT_ONLY}" != "true" ]]; then
-        eval ${1} || true
-    fi
-}
-
-function printFile() {
-    bat ${1}
-    pressKeyToContinue
-}
-
 function reset() {
       # Reset the changes done by this demo
       kubectlSilent delete deploy nginx
@@ -302,17 +257,5 @@ function reset() {
       run "echo -n ."
       kubectlSilent delete svc my-service
 }
-
-function kubectlSilent() {
-    if [[ "${PRINT_ONLY}" != "true" ]]; then
-      kubectl "$@" > /dev/null 2>&1 || true
-    fi
-}
-
-
-GREEN='\033[0;32m'
-RED='\033[0;31m'
-GRAY='\033[0;30m'
-NO_COLOR='\033[0m'
 
 main "$@"
