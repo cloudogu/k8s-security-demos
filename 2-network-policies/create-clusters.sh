@@ -10,7 +10,7 @@ source ${ABSOLUTE_BASEDIR}/../utils.sh
 
 function main() {
 
-    createCluster "${CLUSTER2}" "2" "--enable-network-policy"
+    createCluster 2
 
     # Become cluster admin, so we are authorized to make traefik cluster admin
     becomeClusterAdmin

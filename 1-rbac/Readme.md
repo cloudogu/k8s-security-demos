@@ -5,7 +5,7 @@
 ```bash
 # Switch to proper kubectl context - alternatively use kubectx
 source ../config.sh
-gcloud container clusters get-credentials ${CLUSTER2} \
+gcloud container clusters get-credentials ${CLUSTER[2]} \
     --zone ${ZONE} \
     --project ${PROJECT}
     

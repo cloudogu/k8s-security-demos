@@ -10,7 +10,7 @@ source ${ABSOLUTE_BASEDIR}/utils.sh
 function main() {
     deleteHostNames
 
-    deleteClusterIfExists ${CLUSTER1} ${CLUSTER2} ${CLUSTER3}
+    deleteClusterIfExists ${CLUSTER[1]} ${CLUSTER[2]}
 }
 
 function deleteClusterIfExists() {

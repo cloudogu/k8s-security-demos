@@ -9,13 +9,13 @@ source ${ABSOLUTE_BASEDIR}/../utils.sh
 
 function main() {
 
-    createCluster "${CLUSTER1}" "1" "--enable-legacy-authorization"
+    createCluster 1
     kubectl apply -f ${ABSOLUTE_BASEDIR}/web-console
     ip=$(waitForExternalIp "web-console" "default")
     writeEtcHosts "${ip}" "legacy-authz"
 
 
-    createCluster "${CLUSTER2}" "2" "--enable-network-policy"
+    createCluster 2
     kubectl apply -f ${ABSOLUTE_BASEDIR}/web-console
     ip=$(waitForExternalIp "web-console" "default")
     writeEtcHosts "${ip}" "rbac"

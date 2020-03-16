@@ -5,7 +5,7 @@ Note: This demo uses the same cluster as [Security Context](../3-security-contex
 ```bash
 # Switch to proper kubectl context - alternatively use kubectx
 source ../config.sh
-gcloud container clusters get-credentials ${CLUSTER3} \
+gcloud container clusters get-credentials ${CLUSTER[2]} \
     --zone ${ZONE} \
     --project ${PROJECT}
 kubectl config set-context $(kubectl config current-context) --namespace=wild-west

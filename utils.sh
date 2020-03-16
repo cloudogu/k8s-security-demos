@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+PSPDIR=../4-pod-security-policies/demo
+
 function waitForExternalIp() {
 
     local SERVICE_NAME="$1"
@@ -45,9 +47,9 @@ function writeEtcHosts() {
 
 function createCluster() {
 
-    local CLUSTER="$1"
-    local NUM_NODES="$2"
-    local ADDITIONAL_ARGS="$3"
+    local CLUSTER="${CLUSTER[$1]}"
+    local NUM_NODES="${CLUSTER_NODES[$1]}"
+    local ADDITIONAL_ARGS="${CLUSTER_ADDITIONAL_ARGS[$1]}"
 
     if clusterExists ${CLUSTER}; then
       echo "Cluster $CLUSTER already exists. Reusing."
@@ -68,6 +70,22 @@ function createCluster() {
     gcloud container clusters get-credentials ${CLUSTER} \
         --zone ${ZONE} \
         --project ${PROJECT}
+    
+    # Start with a privileged PSP. Makes sure deployments are allowed to create pods
+    
+    local ABSOLUTE_BASEDIR="$( cd $(dirname $0) && pwd )"
+    
+    # Become cluster admin, so we are authorized to create role for PSP
+    becomeClusterAdmin
+    
+    kubectl apply -f ${ABSOLUTE_BASEDIR}/${PSPDIR}/psp-privileged.yaml
+    kubectlIdempotent create clusterrole psp-privileged \
+        --verb=use \
+        --resource=podsecuritypolicy \
+        --resource-name=privileged
+    kubectlIdempotent create clusterrolebinding default-psp \
+        --clusterrole=psp-privileged \
+        --group system:serviceaccounts
 }
 
 function clusterExists() {

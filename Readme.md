@@ -33,13 +33,14 @@ Each demo is contained in its own sub folder, where each contains a
 * `create-clusters.sh` that creates the cluster(s) on GKE to run the demos on and a 
 * `README.md` that contains the steps of the demo
 
-Note that the scripts also create entries to your `/etc/hosts`. 
+Note that the scripts also create entries to your `/etc/hosts`.
+ 
 You can delete the cluster and those entries once you're done using the `delete-clusters.sh` script. 
 
-In total 3 Clusters are created with a total of 4 `n1-standard-2` nodes. 
-If you left them running for a whole months this would total in about 200$.
-However, for just a quick create, demo, delete action this should be much cheaper.
-While creating those demos the total cost was about 10$. 
+All Demos run inside the same cluster, except the RBAC Demo that requires another one (without RBAC). 
+
+For just a quick create, demo, delete action the cost should be < 10$.
+The total infra cost for initially creating these demos was about 10$. 
 
 # Credentials
 

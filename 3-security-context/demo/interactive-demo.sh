@@ -37,7 +37,7 @@ function setup() {
 
     source ../../config.sh
 
-    run "gcloud -q --no-user-output-enabled container clusters get-credentials ${CLUSTER3} \
+    run "gcloud -q --no-user-output-enabled container clusters get-credentials ${CLUSTER[2]} \
         --zone ${ZONE} \
         --project ${PROJECT}"
     run "echo -n ."
