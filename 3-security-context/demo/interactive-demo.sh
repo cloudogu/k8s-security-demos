@@ -44,7 +44,7 @@ function setup() {
         --project ${PROJECT}"
     run "echo -n ."
 
-    run "kubectl config set-context \$(kubectl config current-context) --namespace=wild-west > /dev/null"
+    run "kubectl config set-context \$(kubectl config current-context) --namespace=sec-ctx > /dev/null"
     run "echo -n ."
 }
 
@@ -64,7 +64,7 @@ function runAsRoot() {
     echo
     printAndRun "kubectl describe pod \$(kubectl get pods  | awk '/^run-as-non-root/ {print \$1;exit}') | grep Error"
 
-    subHeading "1.3 Image that runs as nginx as non-root ➜ runs as uid != 0"
+    subHeading "1.3 Image that runs as nginx as non-root ➡️  runs as uid != 0"
     printFile 02-deployment-run-as-non-root-unprivileged.yaml
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-as-non-root-unprivileged/ {print \$1;exit}')"
     pressKeyToContinue
@@ -103,11 +103,11 @@ function allowPrivilegeEscalation() {
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') id"
      pressKeyToContinue
 
-     printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
+     printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo id"
 
-     subHeading "3.2 Same with  \"allowPrivilegeEscalation: true\" ➜ escalation fails"
+     subHeading "3.2 Same with  \"allowPrivilegeEscalation: true\" ➡️  escalation fails"
      printFile 05-deployment-allow-no-privilege-escalation.yaml
-     printAndRun "kubectl exec \$(kubectl get pods  | awk '/allow-no-privilege-escalation/ {print \$1;exit}') sudo apt update"
+     printAndRun "kubectl exec \$(kubectl get pods  | awk '/allow-no-privilege-escalation/ {print \$1;exit}') sudo id"
 
      pressKeyToContinue
 }
@@ -120,7 +120,7 @@ function enableServiceLinks() {
   printAndRun "kubectl create service clusterip my-service --tcp=80:8080 || true"
   printAndRun "kubectl run tmp-env --generator=run-pod/v1 --image busybox:1.31.1-musl --command sleep 100000"
   pressKeyToContinue
-  printAndRun "kubectl exec tmp-env env | grep -i my"
+  printAndRun "kubectl exec tmp-env env | sort"
 
   subHeading "4.2 Disable service links"
   printAndRun "kubectl run tmp-env2 --generator=run-pod/v1 --image busybox:1.31.1-musl --overrides='{\"spec\": {\"enableServiceLinks\": false}}' --command sleep 100000"
@@ -185,7 +185,7 @@ function readOnlyRootFilesystem() {
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
 
 
-     subHeading "7.2 Same with  \"readOnlyRootFilesystem: true\" ➜ fails to write to temp dirs"
+     subHeading "7.2 Same with  \"readOnlyRootFilesystem: true\" ➡️  fails to write to temp dirs"
      printFile 10-deployment-read-only-fs.yaml
      printAndRun "kubectl exec \$(kubectl get pods  | awk '/^read-only-fs/ {print \$1;exit}') sudo apt update"
 

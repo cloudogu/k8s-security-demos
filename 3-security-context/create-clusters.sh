@@ -13,8 +13,8 @@ function main() {
     createCluster 2
 
     # Make sure we're in a namespace that does not have any netpols
-    kubectlIdempotent create namespace wild-west
-    kubectl config set-context $(kubectl config current-context) --namespace=wild-west
+    kubectlIdempotent create namespace sec-ctx
+    kubectl config set-context $(kubectl config current-context) --namespace=sec-ctx
 
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/02-deployment-run-as-non-root-unprivileged.yaml
     kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/03-deployment-run-as-user-unprivileged.yaml

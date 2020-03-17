@@ -16,7 +16,7 @@ gcloud container clusters get-credentials ${CLUSTER[2]} \
 ls /var/run/secrets/kubernetes.io/serviceaccount/
 # There also a CA.crt, because als communication is done via HTTPS
 
-# How do we find out where the API server is? ➜ Also mounted into each pod, via its env
+# How do we find out where the API server is?➡️  Also mounted into each pod, via its env
 env | grep KUBERNETES
 
 # Let's query this URL
@@ -33,16 +33,16 @@ curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt  https://$KUB
 # Can we also get the API? 
 curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt https://$KUBERNETES_SERVICE_HOST/api/v1
 
-# Lets try to get secrets ➜ Forbidden
+# Lets try to get secrets➡️  Forbidden
 curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt https://$KUBERNETES_SERVICE_HOST/api/v1/namespaces/default/secrets/web-console
 
-# Let's use the token to authenticate ➜ exposes our secrets!
+# Let's use the token to authenticate➡️  exposes our secrets!
 curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt https://$KUBERNETES_SERVICE_HOST/api/v1/namespaces/default/secrets/web-console \
   -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
 
 
 #### Accessing the k8s API with RBAC
-# http://rbac ➜ Not allowed by default
+# http://rbac➡️  Not allowed by default
 
 curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt https://$KUBERNETES_SERVICE_HOST/api/v1/namespaces/default/secrets/web-console \
   -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
@@ -52,7 +52,7 @@ kubectl create rolebinding web-console \
 --clusterrole admin \
 --serviceaccount default:web-console
 
-# http://rbac ➜ Try the same again: Now allowed
+# http://rbac➡️  Try the same again: Now allowed
 curl --cacert /var/run/secrets/kubernetes.io/serviceaccount/ca.crt https://$KUBERNETES_SERVICE_HOST/api/v1/namespaces/default/secrets/web-console \
   -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
 ```

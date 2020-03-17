@@ -1,6 +1,6 @@
 # NetworkPolicy Demo
 
-![Clusters, Namespaces, Pods and allowed routes](http://www.plantuml.com/plantuml/svg/dOzFQy904CNl-oc6zE0fD2gev514GNeGyI3qK3niigCisTr9zmzIYj-zcvYIOFySkgUPUVD-RtRfFBS-QCLS9KtDBTSWZKTxuYN21mDOyR8wMmf6h4cHXOV9b4-5Q1Io0cqt7SzcYuLWLpO0SMlfqaA6rhkbadHD1et_Hnh0XeplPflsDN3M_o1vFXps2N07snLZXaGShLLmKOST-WlP2lQaP2dH9V62YApZ2VmSztPSeuiTmgWA1QRkFThqg5c3-5uFbkD9LiU6ddHDSfEsgoEawLE_4yVNt-02JpmetuDVi80r6KSAZtTHBNIeGmuNBDBorkQBxA-asf88fPTa-Z13xasLIgBnFuODzHWsQFDfbcNV89rDapcJA1fBL-QFNyLadetdxPrNjaGZWbQV)
+![Clusters, Namespaces, Pods and allowed routes](https://www.plantuml.com/plantuml/svg/dL1BQzj04BxhLspLGawoP9icGfGG70Y5Xf23eOVMXzNks5wqcjdk0rEA_tjtPRKMwGCJNRGptsE-cJldkVMXrzaRXK872S5gjlVUkAOiBJ_CTihlGniSM47e0VrCK5_sIkmLwD9eZabUTA45Y-315SvO5Vzbpvq7Mrfm5Ao0igj_OqL0pLlG88l5UoFyJAK8cUiK6cvvpnH6wPOBO3yonbPST3jB0UKzQRBixMB9br8cXAm4EtRdrzTrBRFZr8XRIuV1P2fzGOeR6K90_uffZ3qG-h7tC7p9F3jla7zShvzpnXrxN6KPaeojJxLZzpga0-LnQ7GnSIhVHUY9z-1C4bwbenRkUsJrLud6ulTbRJbiLRT9XlbOv2VeSRLXHN5xvcHiibl-uHs2DwHll-8J-6VIRaY5PXvvnt-5aB3bGVjpWC_GncEY8msR5v66uLESDUm0RI5EPLDN5oPQ_2-HiII3y8emXRhGSNcAYkI-QQ5L9Fyr_1IFuITbiwogwW-JKTOJxaYsIJ8-c_BNOt5JpM-6VOxP7Q0ClVu9)
 
 ## Demo Overview
 
@@ -38,39 +38,39 @@ curl prometheus-server.monitoring.svc.cluster.local/graph
 # Console Window
 cat network-policies/1-ingress-production-deny-all.yaml
 kubectl apply -f network-policies/1-ingress-production-deny-all.yaml
-# http://web-console ➜ exception: connect failed
+# http://web-console➡️  exception: connect failed
 mongodb-linux-x86_64-3.4.18/bin/mongo users --host mongodb.production.svc.cluster.local --eval 'db.users.find().pretty()'
-# http://nosqlclient/ ➜  Gateway Timeout
+# http://nosqlclient/➡️   Gateway Timeout
 
 #### Allow ingress traffic from ingress controller
 # Console Window
 cat network-policies/2-ingress-production-allow-traefik-nosqlclient.yaml
 kubectl apply -f network-policies/2-ingress-production-allow-traefik-nosqlclient.yaml
-# http://nosqlclient/ ➜ Ingress works again ➜ But can't connect to database
+# http://nosqlclient/➡️  Ingress works again➡️  But can't connect to database
 
 
 #### Allow ingress traffic on mongo from nosqlclient
 # Console Window
 cat network-policies/3-ingress-production-allow-nosqlclient-mongo.yaml
 kubectl apply -f network-policies/3-ingress-production-allow-nosqlclient-mongo.yaml
-# http://nosqlclient/ ➜ Connection works again
+# http://nosqlclient/➡️  Connection works again
 
 #### Allow scraping metrics on mongo from prometheus (monitoring namespace)
 # http://promtheus
-# Still can scrape mongodb? ➜ Pitfall: Restart prometheus
+# Still can scrape mongodb?➡️  Pitfall: Restart prometheus
 # Console Window
 kubectl -n monitoring delete pod $(kubectl -n monitoring get pods  | awk '/prometheus-server/ {print $1;exit}')
-# http://promtheus ➜ No longer possible to scrape
+# http://promtheus➡️  No longer possible to scrape
 # Console Window 
 cat network-policies/4-ingress-production-allow-prometheus-mongodb.yaml
 kubectl apply -f network-policies/4-ingress-production-allow-prometheus-mongodb.yaml
-# http://promtheus ➜ Scraping possible again
+# http://promtheus➡️  Scraping possible again
 
 #### Limit ingress to kube-system and monitoring namespaces
 # Console Window
 kubectl apply -f network-policies/5-ingress-kube-system.yaml
 kubectl apply -f network-policies/6-ingress-monitoring.yaml
-# http://web-console ➜ no longer possible to query traefik or prometheus from web-console
+# http://web-console➡️  no longer possible to query traefik or prometheus from web-console
 curl traefik.kube-system.svc.cluster.local:8080/metrics
 curl prometheus-server.monitoring.svc.cluster.local/graph
 
@@ -79,8 +79,8 @@ curl prometheus-server.monitoring.svc.cluster.local/graph
 kubectl apply -f network-policies/7-egress-default-and-production-namespace.yaml
 # http://web-console 
 curl --output mongo.tgz https://downloads.mongodb.org/linux/mongodb-shell-linux-x86_64-3.4.18.tgz && tar xf mongo.tgz
-# ➜ not possible to download mongodb client
+#➡️  not possible to download mongodb client
 # http://nosqlclient/
-# ➜ on subscription is not possible 
+#➡️  on subscription is not possible 
 ```
 

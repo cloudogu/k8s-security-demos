@@ -1,6 +1,6 @@
 # Security Context Demo
 
-![Clusters, Namespaces and Pods](http://www.plantuml.com/plantuml/svg/bO-nQWCn38PtFuMvGZFTq0P2nj12nXB8M3gOatgOioKZoxsKSkzUEzoGZD5aFad_PnsoEj4IWycJf-J4HUj9KRxTWFRFMFlcXcaKBWJl75Ziq-lMRG5QXmLGLlgos-ttO1Pp4-H4UBw6tAtU3mqS4nEIFcnhzCYaApjUguKROa3RdN4eulMtsadnelRPdiwdhdhgOgeYDzQf3nSnftRjPlO1-XcpRZhRVbFhaqPFbw-RTryeYV_n0KU4jG4yJ2XzBi2DBCOive049OP_)
+![Clusters, Namespaces and Pods](https://www.plantuml.com/plantuml/svg/dP2nQiD038RtUmhX3fbCQGF1OsWWIw4lK3g8aseEsvBHtRM1adUlR3maQpJfVdtt2NJC1QtKQGnvI3AZuGH92jitHeQ_0F26SUXDgz19HpLuUjtZdcYPg17RbhuS3br7uHfkH6Yclwla_kiT57MQLLZA0zi0pYfboyvhBV8WIWpDUvVXDDPSs1gNEpsx7NiVVU34sLyCkyonZUMoQy0PyFgKFidbwwPF4f_NfgqoM_f98_TC6q4Q1xOsLz8byVNNS6GXl-a_)
 
 You can choose between the interactive demo:
 
@@ -9,7 +9,7 @@ cd demo
 ./interactive-demo.sh
 ```
 
-Note if you got [bat](https://github.com/sharkdp/bat) on your path, the output will prettier.
+Note if you got [bat](https://github.com/sharkdp/bat) on your `PATH`, the output will prettier.
 
 Alternatively, you could print a transcript of the demo for doing the demo manually
 
