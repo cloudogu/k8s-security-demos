@@ -4,9 +4,8 @@
 
 The following demos showcase several Kubernetes security features.
 
-Initially, these demos were developed during the preparation for the 
-["3 things every developer should know about K8s security"](https://github.com/cloudogu/k8s-security-3-things) talk by 
-[schnatterer](http://github.com/schnatterer/).
+Initially, these demos were developed during the preparation for some talks on [Kubernetes appOps Security](https://github.com/cloudogu/k8s-appops-security-talks)
+ by [schnatterer](http://github.com/schnatterer/).
 
 See also our [series of blog posts](#blog-posts) on the topic.
 

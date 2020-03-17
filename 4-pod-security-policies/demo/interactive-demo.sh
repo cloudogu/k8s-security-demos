@@ -13,7 +13,6 @@ function main() {
     setup
     reset
     run "clear"
-
     privilegedPsp
     
     RemoveDefaultPsp
@@ -76,7 +75,7 @@ function RemoveDefaultPsp() {
   subHeading "Are there any pods?"
   printAndRun "kubectl get pod"
   
-  subHeading "Why are there no pods? Lets check controllers. Here: Deployment -> ReplicaSets"
+  subHeading "Why are there no pods? Lets check controllers. Here: Deployment ➡️  ReplicaSets"
   printAndRun "kubectl get rs"
   pressKeyToContinue
   printAndRun "kubectl describe rs \$(kubectl get rs  | awk '/nginx/ {print \$1;exit}') | grep Error"
