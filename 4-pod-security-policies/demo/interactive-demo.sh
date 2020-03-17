@@ -6,6 +6,7 @@ ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
 PRINT_ONLY=${PRINT_ONLY:-false}
 
 source ${ABSOLUTE_BASEDIR}/../../interactive-utils.sh
+source ${ABSOLUTE_BASEDIR}/../../cluster-utils.sh
 
 function main() {
 
@@ -23,8 +24,6 @@ function main() {
     
     useLessRestrictivePsp
     
-    statefulSet
-
     echo
     message "This concludes the demo, thanks for securing your clusters!"
 }
@@ -50,8 +49,9 @@ function privilegedPsp() {
   subHeading "Start a pod (via a deployment)"
   printAndRun "kubectl create deployment nginx --image nginx:1.17.9"
   
-  subHeading "It's running!"
-  run "sleep 2"
+  echo
+  local podName="$(kubectl get pod  | awk '/^nginx/ {print $1;exit}')"
+  waitForPodReady "${podName}" psp
   printAndRun "kubectl get pod \$(kubectl get pod  | awk '/^nginx/ {print \$1;exit}')"
   
   subHeading "It uses a privileged predefined PSP"
@@ -113,8 +113,9 @@ function adhereToRestrictivePsp() {
   printFile 01b-nginx-unprivileged.yaml
   printAndRun "kubectl apply -f 01b-nginx-unprivileged.yaml" 
   
-  subHeading "It's running!"
-  run "sleep 2"
+  echo
+  local podName="$(kubectl get pod  | awk '/unprivileged/ {print $1;exit}')"
+  waitForPodReady "${podName}" psp
   printAndRun "kubectl get pod \$(kubectl get pod  | awk '/unprivileged/ {print \$1;exit}')"
   
   pressKeyToContinue
@@ -139,14 +140,6 @@ function useLessRestrictivePsp() {
   pressKeyToContinue 
 }
 
-function statefulSet() {
-  heading "Other controlers, such as statefulsets are also restricted by PSP"
-  printAndRun "kubectl get sts"
-  
-  subHeading "However, they don't rely on ReplicaSets. Errors can be found at the controler directly."
-  printAndRun "kubectl describe sts stateful | grep error"
-}
-
 function reset() {
   # Reset the changes done by this demo
   kubectlSilent delete deploy nginx
@@ -157,7 +150,6 @@ function reset() {
   run "echo -n ."
   kubectlSilent delete -f 02a-psp-whitelist.yaml
   run "echo -n ."
-  
   kubectlSilent apply -f psp-privileged.yaml
   run "echo -n ."
 }

@@ -14,13 +14,7 @@ rules:
     resources: ['podsecuritypolicies']
     verbs:     ['use']
     resourceNames:
-      - database-psp
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: nginx
-  namespace: psp
+      - privileged
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
@@ -35,4 +29,3 @@ subjects:
   - kind: ServiceAccount
     name: nginx
     namespace: psp
-

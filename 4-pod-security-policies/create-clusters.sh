@@ -16,8 +16,6 @@ function main() {
     kubectlIdempotent create namespace psp
     
     kubectl config set-context $(kubectl config current-context) --namespace=psp
-    
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/03-statefulset.yaml
 }
 
 main "$@"
