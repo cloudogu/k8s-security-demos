@@ -69,8 +69,8 @@ The examples evolved further while working on an article series called "Kubernet
   * [🇬🇧 Network Policies - Part 2 - Advanced Topics and Tips](https://cloudogu.com/en/blog/k8s-app-ops-part-2)
   * [🇩🇪 Network Policies - Teil 2 - Fortgeschrittene Themen und Tipps](https://cloudogu.com/de/blog/k8s-app-ops-teil-2)
 * 01/2020
-  * 🇬🇧 Security Context – Part 1: Good Practices
-  * 🇩🇪 Security Context – Teil 1: Good Practices
+  * [🇬🇧 Security Context – Part 1: Good Practices](https://cloudogu.com/en/blog/k8s-app-ops-part-3-security-context-1)
+  * [🇩🇪 Security Context – Teil 1: Good Practices](https://cloudogu.com/de/blog/k8s-app-ops-teil-3-security-context-1)
 * 02/2020
   * 🇬🇧 Security Context - Background
   * 🇩🇪 Security Context - Hintergründe
