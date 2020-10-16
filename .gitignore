@@ -1,2 +1,4 @@
 .idea/
 *.iml
+terraform/account.json
+terraform/.terraform

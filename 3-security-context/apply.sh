@@ -10,8 +10,6 @@ source ${ABSOLUTE_BASEDIR}/../cluster-utils.sh
 
 function main() {
 
-    createCluster 2
-
     # Make sure we're in a namespace that does not have any netpols
     kubectlIdempotent create namespace sec-ctx
     kubectl config set-context $(kubectl config current-context) --namespace=sec-ctx

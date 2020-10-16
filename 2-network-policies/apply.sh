@@ -10,15 +10,11 @@ source ${ABSOLUTE_BASEDIR}/../cluster-utils.sh
 
 function main() {
 
-    createCluster 2
-
-    # Become cluster admin, so we are authorized to make traefik cluster admin
-    becomeClusterAdmin
-
     kubectl apply -f ${ABSOLUTE_BASEDIR}/namespaces
     # Assign label to kube-system namespace so we can match it in network policies
     kubectlIdempotent label namespace/kube-system namespace=kube-system --overwrite
 
+    # Note that this requires the applying user to be cluster admin
     kubectl apply -f ${ABSOLUTE_BASEDIR}/traefik/traefik-basic-console-basic-auth-secret.yaml
     helm upgrade --install traefik --namespace kube-system --version 1.59.2 \
         --values ${ABSOLUTE_BASEDIR}/traefik/values.yaml \
@@ -27,7 +23,6 @@ function main() {
     externalIp=$(waitForExternalIp "traefik" "kube-system")
     writeEtcHosts "${externalIp}" "$(findIngressHostname "traefik-dashboard" "kube-system")"
 
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/../1-rbac/web-console
     kubectl apply -f ${ABSOLUTE_BASEDIR}/web-console
     writeEtcHosts "${externalIp}" "$(findIngressHostname "web-console" "default")"
 

@@ -10,26 +10,30 @@ source ${ABSOLUTE_BASEDIR}/cluster-utils.sh
 function main() {
     deleteHostNames
 
-    deleteClusterIfExists ${CLUSTER[1]} ${CLUSTER[2]}
+    deleteClusterIfExists
 }
 
 function deleteClusterIfExists() {
-    local clusters=""
+  (
+    cd terraform && terraform init \
+      -backend-config "path=${CLUSTER}" \
+      -backend-config "bucket=${TERRAFORM_BUCKET}" \
+      -backend-config "credentials=account.json" \
+  )
 
-    for cluster in "$@"; do
-        if clusterExists ${cluster}; then
-            clusters="$clusters $cluster"
-        fi
-    done
-
-    # TODO For some reason this script returns -1, even when clusters are deleted
-    set +x
-    if [[ ! -z "${clusters}" ]]
-    then
-        yes | gcloud beta container --project ${PROJECT} clusters delete ${clusters} --zone ${ZONE}
-    else
-        echo No cluster exists. Skipping deletion
-     fi
+  (
+    cd terraform && terraform destroy \
+        -var "gce_project=${PROJECT}" \
+        -var "gce_location=${ZONE}" \
+        -var "cluster_name=${CLUSTER}" \
+        -var "credentials=account.json" \
+        -var "node_count=0" \
+        -var "k8s_version_prefix=dontcare" \
+        -var "machine_type=dontcare"
+  )
+    
+  # TODO delete context as well?
+  #kubectl config view --template='{{ range .contexts }}{{ if eq .name "'$(kubectl config current-context)'" }}{{ .context.cluster }}{{ end }}{{ end }}'
 }
 
 function deleteHostNames() {
