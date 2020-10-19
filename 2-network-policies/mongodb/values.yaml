@@ -1,0 +1,13 @@
+fullnameOverride: mongodb
+useStatefulSet: true
+
+auth:
+  # This is a deliberate security misconfiguration. When using plain mongo docker image, e.g. this is the default :-o
+  enabled: false
+    
+metrics:
+  enabled: true
+  livenessProbe:
+    enabled: true
+  readinessProbe:
+    enabled: true

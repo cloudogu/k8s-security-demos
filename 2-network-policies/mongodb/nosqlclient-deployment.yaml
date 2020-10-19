@@ -17,7 +17,7 @@ spec:
         run: nosqlclient
     spec:
       containers:
-      - image: mongoclient/mongoclient:2.2.0
+      - image: mongoclient/mongoclient:4.0.1
         name: nosqlclient
         resources:
           requests:

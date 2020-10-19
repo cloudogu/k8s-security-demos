@@ -43,15 +43,16 @@ function main() {
     writeEtcHosts "${externalIp}" "$(findIngressHostname "prometheus-server" "monitoring")"
 
     # Make sure mongodb is applied first, otherwise adminmongo seems not to show predefined DB
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/mongodb/mongodb-service.yaml
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/mongodb/mongodb-statefulset.yaml
+    helm upgrade --install mongo --namespace=production --version 9.2.4 \
+        --values ${ABSOLUTE_BASEDIR}/mongodb/values.yaml \
+         bitnami/mongodb
     waitForPodReady mongodb production
 
     kubectl -n production cp ${ABSOLUTE_BASEDIR}/users.json mongodb-0:/tmp/users.json
     # Data taken from https://swapi.co/api/people/?format=json
     kubectl -n production exec mongodb-0 -- mongoimport -d users -c users --jsonArray /tmp/users.json
 
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/mongodb
+    find ${ABSOLUTE_BASEDIR}/mongodb -name 'nosqlclient*' -exec kubectl apply -f {} \;
     writeEtcHosts "${externalIp}" "$(findIngressHostname "nosqlclient" "production")"
 }
 
