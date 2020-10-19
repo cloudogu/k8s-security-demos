@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PSPDIR=../4-pod-security-policies/demo
+PSPDIR=4-pod-security-policies/demo
 
 function waitForExternalIp() {
 

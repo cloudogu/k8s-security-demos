@@ -15,7 +15,7 @@ function main() {
      
     # Start with a privileged PSP. Makes sure deployments are allowed to create pods
     # Note that this requires the applying user to be cluster admin
-    kubectl apply -f ${ABSOLUTE_BASEDIR}/${PSPDIR}/psp-privileged.yaml
+    kubectl apply -f demo/psp-privileged.yaml
   
     # Start in an empty namespace for a smoother intro to the demo
     kubectlIdempotent create namespace psp
