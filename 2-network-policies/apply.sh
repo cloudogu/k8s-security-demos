@@ -16,9 +16,12 @@ function main() {
 
     # Note that this requires the applying user to be cluster admin
     kubectl apply -f ${ABSOLUTE_BASEDIR}/traefik/traefik-basic-console-basic-auth-secret.yaml
+    
+    helm repo add center https://repo.chartcenter.io
+    
     helm upgrade --install traefik --namespace kube-system --version 1.59.2 \
         --values ${ABSOLUTE_BASEDIR}/traefik/values.yaml \
-        stable/traefik
+        center/stable/traefik
 
     externalIp=$(waitForExternalIp "traefik" "kube-system")
     writeEtcHosts "${externalIp}" "$(findIngressHostname "traefik-dashboard" "kube-system")"
@@ -27,9 +30,11 @@ function main() {
     writeEtcHosts "${externalIp}" "$(findIngressHostname "web-console" "default")"
 
     kubectl apply -f ${ABSOLUTE_BASEDIR}/prometheus/prometheus-basic-auth-secret.yaml
-    helm upgrade --install prometheus --namespace=monitoring --version 7.1.0 \
+    
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm upgrade --install prometheus --namespace=monitoring --version 11.16.2 \
         --values ${ABSOLUTE_BASEDIR}/prometheus/values.yaml \
-        stable/prometheus
+         prometheus-community/prometheus
 
     writeEtcHosts "${externalIp}" "$(findIngressHostname "prometheus-server" "monitoring")"
 
