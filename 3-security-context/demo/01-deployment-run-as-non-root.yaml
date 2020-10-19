@@ -14,7 +14,7 @@ spec:
         run: run-as-non-root
     spec:
       containers:
-      - image: nginx:1.17.2
+      - image: nginx:1.19.3
         name: run-as-non-root
         securityContext:
           runAsNonRoot: true

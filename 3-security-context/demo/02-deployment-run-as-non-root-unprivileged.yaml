@@ -16,7 +16,7 @@ spec:
         run: run-as-non-root-unprivileged
     spec:
       containers:
-      - image: nginxinc/nginx-unprivileged:1.17.2
+      - image: nginxinc/nginx-unprivileged:1.19.3
         name: run-as-non-root-unprivileged
         securityContext:
           runAsNonRoot: true

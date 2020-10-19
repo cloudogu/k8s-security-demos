@@ -21,7 +21,7 @@ spec:
       enableServiceLinks: false
       containers:
           # Another suitable example springcommunity/spring-framework-petclinic:5.1.5
-        - image: nginxinc/nginx-unprivileged:1.17.2
+        - image: nginxinc/nginx-unprivileged:1.19.3
           name: all-at-once
           securityContext:
             readOnlyRootFilesystem: true

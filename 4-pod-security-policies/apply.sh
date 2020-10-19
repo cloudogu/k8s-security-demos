@@ -6,7 +6,7 @@ ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
 
 source ${ABSOLUTE_BASEDIR}/../config.sh
 source ${ABSOLUTE_BASEDIR}/../cluster-utils.sh
-
+source ${ABSOLUTE_BASEDIR}/../interactive-utils.sh
 
 function main() {
 
@@ -15,7 +15,7 @@ function main() {
      
     # Start with a privileged PSP. Makes sure deployments are allowed to create pods
     # Note that this requires the applying user to be cluster admin
-    kubectl apply -f demo/psp-privileged.yaml
+    kubectl apply -f ${ABSOLUTE_BASEDIR}/demo/psp-privileged.yaml
   
     # Start in an empty namespace for a smoother intro to the demo
     kubectlIdempotent create namespace psp

@@ -16,5 +16,5 @@ spec:
         seccomp.security.alpha.kubernetes.io/pod: runtime/default
     spec:
       containers:
-      - image: nginx:1.17.2
+      - image: nginx:1.19.3
         name: run-with-seccomp

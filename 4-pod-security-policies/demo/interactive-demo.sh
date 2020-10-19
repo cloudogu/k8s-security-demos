@@ -34,11 +34,8 @@ function setup() {
 
     run "echo Setting up environment for interactive demo 'pod security policy'"
 
-    source ../../config.sh
+    source ${ABSOLUTE_BASEDIR}/../../config.sh
 
-    run "gcloud -q --no-user-output-enabled container clusters get-credentials ${CLUSTER[2]} \
-        --zone ${ZONE} \
-        --project ${PROJECT}"
     run "echo -n ."
 
     run "kubectl config set-context \$(kubectl config current-context) --namespace=psp > /dev/null"
@@ -49,7 +46,7 @@ function privilegedPsp() {
   heading "With privileged PSP"
     
   subHeading "Start a pod (via a deployment)"
-  printAndRun "kubectl create deployment nginx --image nginx:1.17.9"
+  printAndRun "kubectl create deployment nginx --image nginx:1.19.3"
   
   echo
   local podName="$(kubectl get pod  | awk '/^nginx/ {print $1;exit}')"
@@ -60,7 +57,7 @@ function privilegedPsp() {
   printAndRun "kubectl get pod \$(kubectl get pod  | awk '/^nginx/ {print \$1;exit}') -o jsonpath='{.metadata.annotations.kubernetes\.io/psp}'  "
   echo
   pressKeyToContinue
-  printFile psp-privileged.yaml
+  printFile ${ABSOLUTE_BASEDIR}/psp-privileged.yaml
   
   pressKeyToContinue
 }
@@ -90,8 +87,8 @@ function introduceRestrictedPsp() {
   heading "Introduce restricted PSP"
 
   subHeading "Apply PSP"
-  printFile 01-psp-restrictive.yaml
-  printAndRun "kubectl apply -f 01-psp-restrictive.yaml" 
+  printFile ${ABSOLUTE_BASEDIR}/01-psp-restrictive.yaml
+  (cd ${ABSOLUTE_BASEDIR} && printAndRun "kubectl apply -f 01-psp-restrictive.yaml") 
   
   # Delete replica sets -> Deployments create new ones which adhere to new PSP
   subHeading "'Restart' all pods"
@@ -112,8 +109,8 @@ function adhereToRestrictivePsp() {
   heading "Adhere to restricted PSP"
   
   subHeading "Best Option: Adapt application to adhere to PSP"
-  printFile 01b-nginx-unprivileged.yaml
-  printAndRun "kubectl apply -f 01b-nginx-unprivileged.yaml" 
+  printFile ${ABSOLUTE_BASEDIR}/01b-nginx-unprivileged.yaml
+  (cd ${ABSOLUTE_BASEDIR} && printAndRun "kubectl apply -f 01b-nginx-unprivileged.yaml") 
   
   echo
   local podName="$(kubectl get pod  | awk '/unprivileged/ {print $1;exit}')"
@@ -127,12 +124,12 @@ function useLessRestrictivePsp() {
   heading "Alternative (less secure): Use less restrictive PSP for certain pod"
   
   subHeading "'Whitelist' pod to use less restrictive PSP"
-  printFile 02a-psp-whitelist.yaml
-  printAndRun "kubectl apply -f 02a-psp-whitelist.yaml"
+  printFile ${ABSOLUTE_BASEDIR}/02a-psp-whitelist.yaml
+  (cd ${ABSOLUTE_BASEDIR} && printAndRun "kubectl apply -f 02a-psp-whitelist.yaml")
   
   subHeading "Use service account for nginx pod"
-  printFile 02b-patch-nginx-service-account.yaml
-  printAndRun "kubectl patch deployment nginx --patch \"\$(cat 02b-patch-nginx-service-account.yaml)\""
+  printFile ${ABSOLUTE_BASEDIR}/02b-patch-nginx-service-account.yaml
+  (cd ${ABSOLUTE_BASEDIR} && printAndRun "kubectl patch deployment nginx --patch \"\$(cat 02b-patch-nginx-service-account.yaml)\"")
   
   printAndRun "kubectl delete pod \$(kubectl get pods  | awk '/^nginx/ {print \$1;exit}')"
   
@@ -148,11 +145,11 @@ function reset() {
   run "echo -n ."
   kubectlSilent delete deploy nginx-unprivileged
   run "echo -n ."
-  kubectlSilent delete -f 01-psp-restrictive.yaml
+  kubectlSilent delete -f ${ABSOLUTE_BASEDIR}/01-psp-restrictive.yaml
   run "echo -n ."
-  kubectlSilent delete -f 02a-psp-whitelist.yaml
+  kubectlSilent delete -f ${ABSOLUTE_BASEDIR}/02a-psp-whitelist.yaml
   run "echo -n ."
-  kubectlSilent apply -f psp-privileged.yaml
+  kubectlSilent apply -f ${ABSOLUTE_BASEDIR}/psp-privileged.yaml
   run "echo -n ."
 }
 

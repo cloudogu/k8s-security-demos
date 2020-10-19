@@ -14,7 +14,7 @@ spec:
         run: run-without-caps-unprivileged
     spec:
       containers:
-      - image: nginxinc/nginx-unprivileged:1.17.2
+      - image: nginxinc/nginx-unprivileged:1.19.3
         name: run-without-caps-unprivileged
         securityContext:
           capabilities:

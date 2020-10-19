@@ -16,7 +16,7 @@ spec:
       automountServiceAccountToken: false
       enableServiceLinks: false
       containers:
-        - image: nginxinc/nginx-unprivileged:1.17.9
+        - image: nginxinc/nginx-unprivileged:1.19.3
           name: nginx-unprivileged
           volumeMounts:
             - name: tmp

@@ -16,7 +16,7 @@ spec:
         run: run-as-user-unprivileged
     spec:
       containers:
-      - image: nginxinc/nginx-unprivileged:1.17.2
+      - image: nginxinc/nginx-unprivileged:1.19.3
         name: run-as-user-unprivileged
         securityContext:
           runAsUser: 100000

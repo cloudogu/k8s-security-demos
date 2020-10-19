@@ -16,7 +16,7 @@ spec:
         run: failing-nginx-read-only-fs
     spec:
       containers:
-        - image: nginx:1.17.2
+        - image: nginx:1.19.3
           name: failing-nginx-read-only-fs
           securityContext:
             readOnlyRootFilesystem: true
