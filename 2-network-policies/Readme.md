@@ -14,7 +14,7 @@
 
 ## Demo Listing
 
-```bash
+```shell script
 # Switch to proper kubectl context - alternatively use kubectx
 source ../config.sh
 gcloud container clusters get-credentials ${CLUSTER[2]} \
@@ -29,8 +29,9 @@ kubectl delete netpol --all -n monitoring
 
 #### All traffic is allowed
 # http://web-console
-curl --output /tmp/mongo.tgz https://downloads.mongodb.org/linux/mongodb-shell-linux-x86_64-3.4.18.tgz && tar xf /tmp/mongo.tgz -C /tmp
-/tmp/mongodb-linux-x86_64-3.4.18/bin/mongo users --host mongodb.production.svc.cluster.local --eval 'db.users.find().pretty()'
+curl https://fastdl.mongodb.org/linux/mongodb-shell-linux-x86_64-debian92-4.4.1.tgz | tar zxv -C /tmp
+mv /tmp/mongo*/bin/mongo /tmp/
+/tmp/mongo users --host mongodb.production.svc.cluster.local --eval 'db.users.find().pretty()'
 curl traefik.kube-system.svc.cluster.local:8080/metrics
 curl prometheus-server.monitoring.svc.cluster.local/graph
 
@@ -38,9 +39,9 @@ curl prometheus-server.monitoring.svc.cluster.local/graph
 # Console Window
 cat network-policies/1-ingress-production-deny-all.yaml
 kubectl apply -f network-policies/1-ingress-production-deny-all.yaml
-# http://web-console➡️  exception: connect failed
+# http://web-console ➡️  exception: connect failed
 mongodb-linux-x86_64-3.4.18/bin/mongo users --host mongodb.production.svc.cluster.local --eval 'db.users.find().pretty()'
-# http://nosqlclient/➡️   Gateway Timeout
+# http://nosqlclient/ ➡️   Gateway Timeout
 
 #### Allow ingress traffic from ingress controller
 # Console Window
@@ -64,7 +65,7 @@ kubectl -n monitoring delete pod $(kubectl -n monitoring get pods  | awk '/prome
 # Console Window 
 cat network-policies/4-ingress-production-allow-prometheus-mongodb.yaml
 kubectl apply -f network-policies/4-ingress-production-allow-prometheus-mongodb.yaml
-# http://promtheus➡️  Scraping possible again
+# http://promtheus ➡ Scraping possible again
 
 #### Limit ingress to kube-system and monitoring namespaces
 # Console Window
@@ -78,9 +79,21 @@ curl prometheus-server.monitoring.svc.cluster.local/graph
 # Console Window
 kubectl apply -f network-policies/7-egress-default-and-production-namespace.yaml
 # http://web-console 
-curl --output mongo.tgz https://downloads.mongodb.org/linux/mongodb-shell-linux-x86_64-3.4.18.tgz && tar xf mongo.tgz
-#➡️  not possible to download mongodb client
+curl https://fastdl.mongodb.org/linux/mongodb-shell-linux-x86_64-debian92-4.4.1.tgz | tar zxv -C /tmp
+# ➡️  not possible to download mongodb client
 # http://nosqlclient/
-#➡️  on subscription is not possible 
+# ➡️  on subscription is not possible
+
+#### Limit egress from other namespaces
+
+# Place actual API Server address in YAML before applying it. See comment in 8-egress-other-namespaces.yaml for more details
+ACTUAL_API_SERVER_ADDRESS=$(kubectl get endpoints --namespace default kubernetes --template="{{range .subsets}}{{range .addresses}}{{.ip}}{{end}}{{end}}")
+cat network-policies/8-egress-other-namespaces.yaml \
+ | sed "s|0.0.0.0/0|${ACTUAL_API_SERVER_ADDRESS}/32|" \
+ | kubectl apply -f -
+
+kubectl -n monitoring delete pod $(kubectl -n monitoring get pods  | awk '/prometheus-server/ {print $1;exit}')
+kubectl rollout restart deployment traefik -n kube-system
+# http://promtheus ➡ Scraping possible again
 ```
 
