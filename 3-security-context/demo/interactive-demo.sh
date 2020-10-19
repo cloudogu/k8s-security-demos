@@ -9,6 +9,9 @@ source ${ABSOLUTE_BASEDIR}/../../interactive-utils.sh
 
 function main() {
 
+    confirm "Preparing demo in kubernetes cluster '$(kubectl config current-context)'." 'Continue? y/n [n]' \
+     || exit 0
+     
     setup
     reset
     run "clear"
@@ -191,18 +194,12 @@ function readOnlyRootFilesystem() {
 
 
      subHeading "( 7.2a By the way - this could also be done with a networkPolicy )"
-     read -p "Want to see? y/n [n]" answer
-     while true
-      do
-        case ${answer} in
-         [yY]* ) printFile 10a-netpol-egress-docker-sudo-allow-internal-only.yaml
-                 printAndRun "kubectl apply -f 10a-netpol-egress-docker-sudo-allow-internal-only.yaml"
-                 printAndRun "timeout 10s kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
-                 break;;
-
-         * )     break ;;
-        esac
-      done
+     confirm "Want to see? y/n [n]" \
+      && (
+        printFile 10a-netpol-egress-docker-sudo-allow-internal-only.yaml
+        printAndRun "kubectl apply -f 10a-netpol-egress-docker-sudo-allow-internal-only.yaml"
+        printAndRun "timeout 10s kubectl exec \$(kubectl get pods  | awk '/docker-sudo/ {print \$1;exit}') sudo apt update"
+      )
 
      subHeading "7.3 readOnlyRootFilesystem causes issues with other images"
      printFile 11-deployment-nginx-read-only-fs.yaml

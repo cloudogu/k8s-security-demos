@@ -10,6 +10,9 @@ source ${ABSOLUTE_BASEDIR}/../cluster-utils.sh
 
 function main() {
 
+    confirm "Preparing demo in kubernetes cluster '$(kubectl config current-context)'." 'Continue? y/n [n]' \
+     || exit 0
+     
     # Start with a privileged PSP. Makes sure deployments are allowed to create pods
     # Note that this requires the applying user to be cluster admin
     kubectl apply -f ${ABSOLUTE_BASEDIR}/${PSPDIR}/psp-privileged.yaml

@@ -7,9 +7,13 @@ ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
 source ${ABSOLUTE_BASEDIR}/../config.sh
 source ${ABSOLUTE_BASEDIR}/../cluster-utils.sh
 
+source ${ABSOLUTE_BASEDIR}/../interactive-utils.sh
 
 function main() {
 
+    confirm "Preparing demo in kubernetes cluster '$(kubectl config current-context)'." 'Continue? y/n [n]' \
+     || exit 0
+    
     kubectl apply -f ${ABSOLUTE_BASEDIR}/namespaces
     # Assign label to kube-system namespace so we can match it in network policies
     kubectlIdempotent label namespace/kube-system namespace=kube-system --overwrite

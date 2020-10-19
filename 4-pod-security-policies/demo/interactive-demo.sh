@@ -10,6 +10,9 @@ source ${ABSOLUTE_BASEDIR}/../../cluster-utils.sh
 
 function main() {
 
+    confirm "Preparing demo in kubernetes cluster '$(kubectl config current-context)'." 'Continue? y/n [n]' \
+     || exit 0
+     
     setup
     reset
     run "clear"
