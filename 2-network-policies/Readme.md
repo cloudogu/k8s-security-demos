@@ -89,7 +89,7 @@ curl https://fastdl.mongodb.org/linux/mongodb-shell-linux-x86_64-debian92-4.4.1.
 # Place actual API Server address in YAML before applying it. See comment in 8-egress-other-namespaces.yaml for more details
 ACTUAL_API_SERVER_ADDRESS=$(kubectl get endpoints --namespace default kubernetes --template="{{range .subsets}}{{range .addresses}}{{.ip}}{{end}}{{end}}")
 cat network-policies/8-egress-other-namespaces.yaml \
- | sed "s|0.0.0.0/0|${ACTUAL_API_SERVER_ADDRESS}/32|" \
+ | sed "s|APISERVER|${ACTUAL_API_SERVER_ADDRESS}/32|" \
  | kubectl apply -f -
 
 kubectl -n monitoring delete pod $(kubectl -n monitoring get pods  | awk '/prometheus-server/ {print $1;exit}')

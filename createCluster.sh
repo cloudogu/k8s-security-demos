@@ -19,7 +19,6 @@ function createCluster() {
   )
 
   # TODO args would be nice. For
-  # -lock=false
   # -auto-approve
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform apply \
