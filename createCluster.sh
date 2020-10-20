@@ -12,14 +12,17 @@ function createCluster() {
   local NUM_NODES="${CLUSTER_NODES}"
 
   (
-    cd terraform && terraform init \
+    cd ${ABSOLUTE_BASEDIR}/terraform && terraform init \
       -backend-config "path=${CLUSTER}" \
       -backend-config "bucket=${TERRAFORM_BUCKET}" \
-      -backend-config "credentials=account.json"
+      -backend-config "credentials=account.json" 
   )
 
+  # TODO args would be nice. For
+  # -lock=false
+  # -auto-approve
   (
-    cd terraform && terraform apply \
+    cd ${ABSOLUTE_BASEDIR}/terraform && terraform apply \
       -var "gce_project=${PROJECT}" \
       -var "gce_location=${ZONE}" \
       -var "cluster_name=${CLUSTER}" \

@@ -6,7 +6,6 @@ ABSOLUTE_BASEDIR="$( cd ${BASEDIR} && pwd )"
 
 source ${ABSOLUTE_BASEDIR}/../config.sh
 source ${ABSOLUTE_BASEDIR}/../cluster-utils.sh
-
 source ${ABSOLUTE_BASEDIR}/../interactive-utils.sh
 
 function main() {

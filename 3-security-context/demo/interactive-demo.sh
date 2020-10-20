@@ -57,7 +57,7 @@ function runAsRoot() {
 
     subHeading "1.2 Same with \"runAsNonRoot: true\""
     printFile ${ABSOLUTE_BASEDIR}/01-deployment-run-as-non-root.yaml
-    (cd ${ABSOLUTE_BASEDIR} && printAndRun "kubectl apply -f /01-deployment-run-as-non-root.yaml")
+    (cd ${ABSOLUTE_BASEDIR} && printAndRun "kubectl apply -f 01-deployment-run-as-non-root.yaml")
     run "sleep 3"
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/^run-as-non-root/ {print \$1;exit}')"
     pressKeyToContinue
