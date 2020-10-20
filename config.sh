@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 PROJECT=${PROJECT:-"cloudogu-trainings"}
 ZONE=${ZONE:-"us-central1-a"}
-TERRAFORM_BUCKET=${TERRAFORM_BUCKET:-"cloudogu-trainings-terraform"}
 
 # Docs recommend to not use fuzzy version here:
 # https://www.terraform.io/docs/providers/google/r/container_cluster.html

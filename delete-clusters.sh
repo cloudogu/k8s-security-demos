@@ -15,14 +15,12 @@ function main() {
 
 function deleteClusterIfExists() {
   (
-    cd terraform && terraform init \
-      -backend-config "path=${CLUSTER}" \
-      -backend-config "bucket=${TERRAFORM_BUCKET}" \
-      -backend-config "credentials=account.json" \
+    cd ${ABSOLUTE_BASEDIR}/terraform && terraform init \
+      -backend-config "path=.terraform/backend/${CLUSTER}" 
   )
 
   (
-    cd terraform && terraform destroy \
+    cd ${ABSOLUTE_BASEDIR}/terraform && terraform destroy \
         -var "gce_project=${PROJECT}" \
         -var "gce_location=${ZONE}" \
         -var "cluster_name=${CLUSTER}" \

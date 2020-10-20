@@ -12,7 +12,7 @@ provider google-beta {
 }
 
 terraform {
-  backend "gcs" {
+  backend "local" {
   }
 }
 

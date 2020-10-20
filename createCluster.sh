@@ -13,13 +13,10 @@ function createCluster() {
 
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform init \
-      -backend-config "path=${CLUSTER}" \
-      -backend-config "bucket=${TERRAFORM_BUCKET}" \
-      -backend-config "credentials=account.json" 
+      -backend-config "path=.terraform/backend/${CLUSTER}" 
   )
 
-  # TODO args would be nice. For
-  # -auto-approve
+  # TODO args would be nice, e.g for -auto-approve 
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform apply \
       -var "gce_project=${PROJECT}" \
