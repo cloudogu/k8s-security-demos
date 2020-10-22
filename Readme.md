@@ -93,11 +93,12 @@ gcloud iam service-accounts keys create \
 ``` 
 * Have terraform installed (should work with 0.12 and 0.13)
 * Call `./create Cluster.sh`
-* Terraform will ask for confirmation before executing. 
+* Terraform will ask for confirmation before executing.   
+  If you don't want that, call `./createCluster.sh -auto-approve`
 
 ## Deleting clusters 
 
-You can delete the cluster and entries to `/etc/hosts` once you're done using the `delete-clusters.sh` script. 
+You can delete the cluster and entries to `/etc/hosts` once you're done using the `./delete-clusters.sh` script. 
 
 ## Costs 
 

@@ -10,10 +10,13 @@ source ${ABSOLUTE_BASEDIR}/cluster-utils.sh
 function main() {
     deleteHostNames
 
-    deleteClusterIfExists
+    deleteClusterIfExists "$@"
 }
 
 function deleteClusterIfExists() {
+  
+  local ADDITIONAL_ARGS="$@"
+  
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform init \
       -backend-config "path=.terraform/backend/${CLUSTER}" 
@@ -27,7 +30,8 @@ function deleteClusterIfExists() {
         -var "credentials=account.json" \
         -var "node_count=0" \
         -var "k8s_version_prefix=dontcare" \
-        -var "machine_type=dontcare"
+        -var "machine_type=dontcare" \
+        "$ADDITIONAL_ARGS"
   )
     
   # TODO delete context as well?

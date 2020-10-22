@@ -9,6 +9,7 @@ source ${ABSOLUTE_BASEDIR}/cluster-utils.sh
 
 function createCluster() {
 
+  local ADDITIONAL_ARGS="$@"
   local NUM_NODES="${CLUSTER_NODES}"
 
   (
@@ -16,7 +17,6 @@ function createCluster() {
       -backend-config "path=.terraform/backend/${CLUSTER}" 
   )
 
-  # TODO args would be nice, e.g for -auto-approve 
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform apply \
       -var "gce_project=${PROJECT}" \
@@ -25,7 +25,8 @@ function createCluster() {
       -var "credentials=account.json" \
       -var "node_count=${NUM_NODES}" \
       -var "k8s_version_prefix=${CLUSTER_VERSION}" \
-      -var "machine_type=${MACHINE_TYPE}"
+      -var "machine_type=${MACHINE_TYPE}" \
+      "$ADDITIONAL_ARGS"
   )
 
   # Start with a privileged PSP. Makes sure deployments are allowed to create pods
@@ -45,4 +46,4 @@ function becomeClusterAdmin() {
   # TODO replace by kubectl whoami in order to get rid of gcloud dependency?
 }
 
-createCluster
+createCluster "$@"
