@@ -2,7 +2,24 @@
 
 # Kubernetes Security Demos
 
-The following demos showcase several Kubernetes security features.
+Demos for several kubernetes security features 
+
+<!-- Update with `doctoc --notitle README.md`. See https://github.com/thlorenz/doctoc -->
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Overview](#overview)
+- [Running the demos](#running-the-demos)
+- [Credentials](#credentials)
+- [Blog Posts](#blog-posts)
+- [Setting up the clusters](#setting-up-the-clusters)
+  - [Deleting clusters](#deleting-clusters)
+  - [Costs](#costs)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+# Overview
 
 Initially, these demos were developed during the preparation for some talks on [Kubernetes appOps Security](https://github.com/cloudogu/k8s-appops-security-talks) and our [K8s application security training](https://cloudogu.com/en/trainings/).
 
@@ -41,6 +58,14 @@ If not otherwise stated, the login credentials for the webapps are
 * Password: `12345` 
 
 It's a demo after all! 😉
+
+# Demo recordings
+
+## Security Context 
+
+[![asciicast](https://asciinema.org/a/366999.svg)](https://asciinema.org/a/366999)
+
+Recorded live at [heiseDevSec 2020](https://cloudogu.github.io/k8s-appops-security-talks/2020-10-23-heise-devsec/#/).
 
 # Blog Posts
 
