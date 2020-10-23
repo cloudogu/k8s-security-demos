@@ -15,13 +15,12 @@ function main() {
 
 function deleteClusterIfExists() {
   
-  local ADDITIONAL_ARGS="$@"
   
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform init \
       -backend-config "path=.terraform/backend/${CLUSTER}" 
   )
-
+  
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform destroy \
         -var "gce_project=${PROJECT}" \
@@ -30,8 +29,7 @@ function deleteClusterIfExists() {
         -var "credentials=account.json" \
         -var "node_count=0" \
         -var "k8s_version_prefix=dontcare" \
-        -var "machine_type=dontcare" \
-        "$ADDITIONAL_ARGS"
+        -var "machine_type=dontcare" $* 
   )
     
   # TODO delete context as well?
@@ -40,7 +38,7 @@ function deleteClusterIfExists() {
 
 function deleteHostNames() {
 
-    echo "Deleting entries from /etc/hosts: ${HOSTNAMES[@]}"
+    echo "Deleting entries from /etc/hosts: " "${HOSTNAMES[@]}"
 
     for NAME in "${HOSTNAMES[@]}"
     do

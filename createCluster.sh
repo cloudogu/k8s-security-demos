@@ -9,7 +9,6 @@ source ${ABSOLUTE_BASEDIR}/cluster-utils.sh
 
 function createCluster() {
 
-  local ADDITIONAL_ARGS="$@"
   local NUM_NODES="${CLUSTER_NODES}"
 
   (
@@ -25,8 +24,7 @@ function createCluster() {
       -var "credentials=account.json" \
       -var "node_count=${NUM_NODES}" \
       -var "k8s_version_prefix=${CLUSTER_VERSION}" \
-      -var "machine_type=${MACHINE_TYPE}" \
-      "$ADDITIONAL_ARGS"
+      -var "machine_type=${MACHINE_TYPE}" $*
   )
 
   # Start with a privileged PSP. Makes sure deployments are allowed to create pods
