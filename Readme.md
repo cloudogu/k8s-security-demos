@@ -83,7 +83,11 @@ The examples evolved further while working on an article series called "Kubernet
 * 02/2020
   * [🇬🇧 Security Context - Background](https://cloudogu.com/en/blog/k8s-app-ops-part-4-security-context-2)
   * [🇩🇪 Security Context - Hintergründe](https://cloudogu.com/de/blog/k8s-app-ops-teil-4-security-context-2)
-* To be continued with PodSecurityPolicies
+* 04/2020
+  * [🇬🇧 Pod Security Policies – Good Practices](https://cloudogu.com/en/blog/k8s-app-ops-part-5-pod-security-policies-1)
+  * [🇩🇪 Pod Security Policies – Good Practices](https://cloudogu.com/de/blog/k8s-app-ops-teil-5-pod-security-policies-1)
+* 05/2020
+  * To be completed with PodSecurityPolicies part 2
 
 # Setting up the clusters
 
