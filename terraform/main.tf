@@ -55,6 +55,10 @@ resource "google_container_cluster" "k8s-training-cluster" {
     # Create entry for cluster in local kubeconfig
     command = "gcloud container clusters get-credentials ${var.cluster_name} --zone ${var.gce_location} --project ${var.gce_project}"
   }
+  provisioner "local-exec" {
+    when    = destroy
+    command = "kubectl config delete-context gke_${self.project}_${self.location}_${self.name}"
+  }
 }
 
 resource "google_container_node_pool" "k8s-training-node-pool" {

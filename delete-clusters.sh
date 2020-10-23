@@ -31,9 +31,6 @@ function deleteClusterIfExists() {
         -var "k8s_version_prefix=dontcare" \
         -var "machine_type=dontcare" $* 
   )
-    
-  # TODO delete context as well?
-  #kubectl config view --template='{{ range .contexts }}{{ if eq .name "'$(kubectl config current-context)'" }}{{ .context.cluster }}{{ end }}{{ end }}'
 }
 
 function deleteHostNames() {
