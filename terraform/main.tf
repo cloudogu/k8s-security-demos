@@ -1,19 +1,30 @@
+terraform {
+  
+  backend "local" {}
+  
+  required_providers {
+
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 3.51.0"
+    }
+    google-beta  = {
+      source  = "hashicorp/google"
+      version = "~> 3.51.0"
+    }
+  }
+  required_version = ">= 0.14"
+}
+
 provider "google" {
   credentials = file(var.credentials)
   project = var.gce_project
-  version     = "3.40.0"
 }
 
 # Required for pod_security_policy_config 
 provider google-beta {
   credentials = file(var.credentials)
   project = var.gce_project
-  version     = "3.40.0"
-}
-
-terraform {
-  backend "local" {
-  }
 }
 
 data "google_container_engine_versions" "k8s-training" {
