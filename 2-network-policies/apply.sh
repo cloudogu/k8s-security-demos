@@ -42,6 +42,7 @@ function main() {
     writeEtcHosts "${externalIp}" "$(findIngressHostname "prometheus-server" "monitoring")"
 
     # Make sure mongodb is applied first, otherwise adminmongo seems not to show predefined DB
+    helm repo add bitnami https://charts.bitnami.com/bitnami
     helm upgrade --install mongo --namespace=production --version 9.2.4 \
         --values ${ABSOLUTE_BASEDIR}/mongodb/values.yaml \
          bitnami/mongodb
