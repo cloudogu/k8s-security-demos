@@ -118,7 +118,7 @@ gcloud projects add-iam-policy-binding ${PROJECT} \
 
 # Export credentials
 gcloud iam service-accounts keys create \
-  --iam-account serviceAccount:${SA}@${PROJECT}.iam.gserviceaccount.com terraform/account.json
+  --iam-account ${SA}@${PROJECT}.iam.gserviceaccount.com terraform/account.json
 ``` 
 * Have terraform installed (should work with 0.12 and 0.13)
 * Call `./create Cluster.sh`
