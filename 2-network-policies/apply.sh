@@ -20,11 +20,11 @@ function main() {
     # Note that this requires the applying user to be cluster admin
     kubectl apply -f ${ABSOLUTE_BASEDIR}/traefik/traefik-basic-console-basic-auth-secret.yaml
     
-    helm repo add center https://repo.chartcenter.io
+    helm repo add stable https://charts.helm.sh/stable
     
-    helm upgrade --install traefik --namespace kube-system --version 1.59.2 \
+    helm upgrade --install traefik --namespace kube-system --version 1.87.7 \
         --values ${ABSOLUTE_BASEDIR}/traefik/values.yaml \
-        center/stable/traefik
+        stable/traefik
 
     externalIp=$(waitForExternalIp "traefik" "kube-system")
     writeEtcHosts "${externalIp}" "$(findIngressHostname "traefik-dashboard" "kube-system")"

@@ -7,7 +7,7 @@ ZONE=${ZONE:-"us-central1-a"}
 # OTOH google deprecates support for specific version rather fast.
 # Resulting in "Error 400: Master version "X" is unsupported., badRequest"
 # So we use a version prefix hoping that the stable patch versions won't do unexpected things (which is unlikely!) 
-CLUSTER_VERSION=${CLUSTER_VERSION:-"1.16."}
+CLUSTER_VERSION=${CLUSTER_VERSION:-"1.18."}
 MACHINE_TYPE=${MACHINE_TYPE:-"n1-standard-2"}
 
 CLUSTER="k8s-sec-demo-rbac-nwp-psp"

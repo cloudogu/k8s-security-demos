@@ -9,8 +9,6 @@ source ${ABSOLUTE_BASEDIR}/cluster-utils.sh
 
 function createCluster() {
 
-  local NUM_NODES="${CLUSTER_NODES}"
-
   (
     cd ${ABSOLUTE_BASEDIR}/terraform && terraform init \
       -backend-config "path=.terraform/backend/${CLUSTER}" 
@@ -22,7 +20,7 @@ function createCluster() {
       -var "gce_location=${ZONE}" \
       -var "cluster_name=${CLUSTER}" \
       -var "credentials=account.json" \
-      -var "node_count=${NUM_NODES}" \
+      -var "node_count=${CLUSTER_NODES}" \
       -var "k8s_version_prefix=${CLUSTER_VERSION}" \
       -var "machine_type=${MACHINE_TYPE}" $*
   )
