@@ -41,4 +41,6 @@ spec:
         env:
           - name: MONGO_URL
             value: mongodb://mongodb
+          - name: MONGOCLIENT_DEFAULT_CONNECTION_URL
+            value: mongodb://mongodb/users
 

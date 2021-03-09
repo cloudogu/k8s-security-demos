@@ -51,7 +51,7 @@ spec:
       app: traefik
   ingress:
     - ports:
-        - port: 8080
+        - port: 9100
       from:
         - namespaceSelector:
             matchLabels:

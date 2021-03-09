@@ -15,6 +15,6 @@ metrics:
 deployment:
   podAnnotations:
     prometheus.io/scrape: "true"
-    prometheus.io/port: "8080"
+    prometheus.io/port: "9100"
 
 

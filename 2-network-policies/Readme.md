@@ -32,7 +32,7 @@ kubectl delete netpol --all -n monitoring
 curl https://fastdl.mongodb.org/linux/mongodb-shell-linux-x86_64-debian92-4.4.1.tgz | tar zxv -C /tmp
 mv /tmp/mongo*/bin/mongo /tmp/
 /tmp/mongo users --host mongodb.production.svc.cluster.local --eval 'db.users.find().pretty()'
-curl traefik.kube-system.svc.cluster.local:8080/metrics
+curl traefik-prometheus.kube-system.svc.cluster.local:9100/metrics
 curl prometheus-server.monitoring.svc.cluster.local/graph
 
 #### Deny all Network Policy
@@ -40,21 +40,21 @@ curl prometheus-server.monitoring.svc.cluster.local/graph
 cat network-policies/1-ingress-production-deny-all.yaml
 kubectl apply -f network-policies/1-ingress-production-deny-all.yaml
 # http://web-console ➡️  exception: connect failed
-mongodb-linux-x86_64-3.4.18/bin/mongo users --host mongodb.production.svc.cluster.local --eval 'db.users.find().pretty()'
+/tmp/mongo users --host mongodb.production.svc.cluster.local --eval 'db.users.find().pretty()'
 # http://nosqlclient/ ➡️   Gateway Timeout
 
 #### Allow ingress traffic from ingress controller
 # Console Window
 cat network-policies/2-ingress-production-allow-traefik-nosqlclient.yaml
 kubectl apply -f network-policies/2-ingress-production-allow-traefik-nosqlclient.yaml
-# http://nosqlclient/➡️  Ingress works again➡️  But can't connect to database
+# http://nosqlclient/➡️  Ingress works again➡️  But can't connect to database mongodb://mongodb/users
 
 
 #### Allow ingress traffic on mongo from nosqlclient
 # Console Window
 cat network-policies/3-ingress-production-allow-nosqlclient-mongo.yaml
 kubectl apply -f network-policies/3-ingress-production-allow-nosqlclient-mongo.yaml
-# http://nosqlclient/➡️  Connection works again
+# http://nosqlclient/➡️  Connection works again to database mongodb://mongodb/users
 
 #### Allow scraping metrics on mongo from prometheus (monitoring namespace)
 # http://promtheus
@@ -72,7 +72,7 @@ kubectl apply -f network-policies/4-ingress-production-allow-prometheus-mongodb.
 kubectl apply -f network-policies/5-ingress-kube-system.yaml
 kubectl apply -f network-policies/6-ingress-monitoring.yaml
 # http://web-console➡️  no longer possible to query traefik or prometheus from web-console
-curl traefik.kube-system.svc.cluster.local:8080/metrics
+curl traefik-prometheus.kube-system.svc.cluster.local:9100/metrics
 curl prometheus-server.monitoring.svc.cluster.local/graph
 
 #### Limit egress from default and production namespace
@@ -81,8 +81,6 @@ kubectl apply -f network-policies/7-egress-default-and-production-namespace.yaml
 # http://web-console 
 curl https://fastdl.mongodb.org/linux/mongodb-shell-linux-x86_64-debian92-4.4.1.tgz | tar zxv -C /tmp
 # ➡️  not possible to download mongodb client
-# http://nosqlclient/
-# ➡️  on subscription is not possible
 
 #### Limit egress from other namespaces
 
