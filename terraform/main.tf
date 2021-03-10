@@ -27,19 +27,19 @@ provider google-beta {
   project = var.gce_project
 }
 
-data "google_container_engine_versions" "k8s-training" {
+data "google_container_engine_versions" "k8s-security-demo" {
   provider       = google-beta
   location       = var.gce_location
   version_prefix = var.k8s_version_prefix
 }
 
-resource "google_container_cluster" "k8s-training-cluster" {
+resource "google_container_cluster" "k8s-security-demo-cluster" {
   # Required for pod_security_policy_config 
   provider = google-beta
   name = var.cluster_name
 
-  min_master_version = data.google_container_engine_versions.k8s-training.latest_master_version
-  node_version = data.google_container_engine_versions.k8s-training.latest_node_version
+  min_master_version = data.google_container_engine_versions.k8s-security-demo.latest_master_version
+  node_version = data.google_container_engine_versions.k8s-security-demo.latest_node_version
   
   location = var.gce_location
 
@@ -72,9 +72,9 @@ resource "google_container_cluster" "k8s-training-cluster" {
   }
 }
 
-resource "google_container_node_pool" "k8s-training-node-pool" {
+resource "google_container_node_pool" "k8s-security-demo-node-pool" {
   location = var.gce_location
-  cluster = google_container_cluster.k8s-training-cluster.name
+  cluster = google_container_cluster.k8s-security-demo-cluster.name
   node_count = var.node_count
 
   management {
