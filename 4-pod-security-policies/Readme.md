@@ -2,8 +2,9 @@
 
 ![Clusters, Namespaces and Pods](http://www.plantuml.com/plantuml/svg/dP11IyCm5CVl_HJFAkpK1JSSHMGC1xi8Ve6vGvOysz3q9RmaJf1zTzDIT3juCOSsxxtV_vUccn0bnzJRuiQGiabZOWjjZ3uy2i7oD6zCRDCn1MJbA2B5kNAzw8rg3LhXhQGXNdNfY4mOCLJ1iyblqSiGaGLZS8aLYgx-cLM9h3oYHLqj7hoASpDyGX4wGrwoxC5GZhvBXV1L03nBrJNi4kcjiuxXTh6KIws7YMEDF7NlLwkwriNvKYIPtMcKN4Ule7mZxmWf_kCqW9sZEFLsunha1JcDKBxK0ROs3J-YpF9C-soNJHwzoXv3hX1cFlXP2J80XGn1Ndjg37qQKcBSL8aycmzZiK5zk226VJuDBgvGFjrbt_gDybFyfaR_KFuDCuR8HiK97ii2Ca-XshT6QwH3jPuaryq9FXSR99rw-mq0)
 
+`apply.sh` deploys the applications required for the demos.
 
-You can choose between the interactive demo:
+Then, you can can start the interactive demo:
 
 ```bash
 cd demo

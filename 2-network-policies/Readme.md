@@ -14,6 +14,10 @@
 
 ## Demo Listing
 
+`apply.sh` deploys the applications required for the demos.
+
+Then you can start the demo:
+
 ```shell script
 # Switch to proper kubectl context - alternatively use kubectx
 source ../config.sh
