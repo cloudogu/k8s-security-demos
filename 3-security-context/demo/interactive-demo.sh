@@ -155,17 +155,16 @@ function dropCapabilities() {
     echo
     printAndRun "kubectl logs \$(kubectl get pods  | awk '/^run-without-caps/ {print \$1;exit}') "
 
-    message "How to find out which capabilities we need to add?"
+    message "How to find out which capabilities we need to add? Reproduce locally."
     printAndRun "docker run --rm --cap-drop ALL nginx:1.19.3"
     pressKeyToContinue
-    echo
+    message "Add first capability: CAP_CHOWN.\nNote: Stop running container with Ctrl + C to continue."
     printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN nginx:1.19.3"
-    pressKeyToContinue
     #printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN --cap-add CAP_NET_BIND_SERVICE nginx:1.19.3"
     #printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN --cap-add CAP_NET_BIND_SERVICE --cap-add SETGID nginx:1.19.3"
     #printAndRun "docker run --rm --cap-drop ALL --cap-add CAP_CHOWN --cap-add CAP_NET_BIND_SERVICE --cap-add SETGID --cap-add SETUID nginx:1.19.3"
 
-    message "... and so on and so forth. Then add the necessary caps to kubernetes:"
+    message "Continue adding capabilities until the container runs.\nFinally add the necessary caps to kubernetes"
     printFile ${ABSOLUTE_BASEDIR}/08-deployment-run-with-certain-caps.yaml
     printAndRun "kubectl get pod \$(kubectl get pods  | awk '/run-with-certain-caps/ {print \$1;exit}')"
 
