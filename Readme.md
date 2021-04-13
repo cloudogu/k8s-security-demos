@@ -21,7 +21,7 @@ Demos for several kubernetes security features
 
 # Overview
 
-Initially, these demos were developed during the preparation for some talks on [Kubernetes appOps Security](https://github.com/cloudogu/k8s-appops-security-talks) and our [K8s application security training](https://cloudogu.com/en/trainings/).
+Initially, these demos were developed during the preparation for some talks on [Kubernetes appOps Security](https://github.com/cloudogu/k8s-appops-security-talks) and our [K8s application security training](https://cloudogu.com/en/trainings/?mtm_campaign=k8s-sec-demos&mtm_kwd=trainings&mtm_source=github&mtm_medium=link).
 
 See also our [series of blog posts](#blog-posts) on the topic.
 
